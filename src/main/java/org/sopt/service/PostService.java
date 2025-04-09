@@ -2,7 +2,7 @@ package org.sopt.service;
 
 import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
-import org.sopt.util.PostUtil;
+import org.sopt.utils.PostUtil;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -32,15 +32,16 @@ public class PostService {
     }
 
     public boolean updatePostTitle(int id, String newTitle) {
+        checkTitleDuplicated(id, newTitle);
         Post post = postRepository.findPostById(id);
         if (post == null) return false;
-        checkTitleDuplicated(id, newTitle);
         return post.changeTitle(newTitle);
     }
 
     public boolean deletePostById(int id) {
         return postRepository.delete(id);
     }
+
 
     // 게시글 작성 제한 시간 체크
     public long getPostDelay() {
@@ -69,10 +70,14 @@ public class PostService {
         }
     }
 
-    public void savePostToFile(int id) throws IOException {
-        Post post = postRepository.findPostById(id);
-        if (post == null) return;
-        BufferedWriter writer = new BufferedWriter(new FileWriter("post_" + id + ".txt"));
-        writer.write("🆔" + id + " | " + "📌 제목:" + post.getTitle());
+    public void savePostToFile(String title) throws IOException {
+        checkTitleDuplicated(title);
+        int postId = postUtil.generatePostId();
+        Post post = new Post(postId, title);
+        postRepository.savePostToFile(post);
     }
+
+//    public void loadPostFromFile(int loadId) {
+//        postRepository.loadPostFromFile(loadId);
+//    }
 }

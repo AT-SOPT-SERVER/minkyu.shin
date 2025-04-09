@@ -38,7 +38,11 @@ public class PostController {
         return postService.getPostDelay();
     }
 
-    public void savePostToFile(int id) throws IOException {
-        postService.savePostToFile(id);
+    public void savePostToFile(String title) throws IOException {
+        postService.savePostToFile(title);
     }
+
+//    public void loadPostFromFile(int loadId) {
+//        postService.loadPostFromFile(loadId);
+//    }
 }

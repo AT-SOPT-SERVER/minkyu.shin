@@ -109,19 +109,26 @@ public class Main {
 
                 case "7":
                     System.out.println("\n📤 [파일 저장]");
-                    System.out.print("저장할 게시글 아이디를 입력해주세요: ");
-                    int saveId = Integer.parseInt(scanner.nextLine());
+                    System.out.print("📌 제목을 입력해주세요: ");
+                    String fileTitle = scanner.nextLine();
                     try {
-                        controller.savePostToFile(saveId);
+                        controller.savePostToFile(fileTitle);
                         System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
                     } catch (IOException e) {
                         System.out.println("❌ " + e.getMessage());
                     }
+                    break;
 
-                case "8":
-                    System.out.println("\n📥 [파일 불러오기]");
-                    System.out.print("불러올 게시글 아이디를 입력해주세요: ");
-                    int loadId = Integer.parseInt(scanner.nextLine());
+//                case "8":
+//                    System.out.println("\n📥 [파일 불러오기]");
+//                    System.out.print("불러올 파일명을 입력해주세요: ");
+//                    int loadId = Integer.parseInt(scanner.nextLine());
+//                    try {
+//                        controller.loadPostFromFile(loadId);
+//                        System.out.println("✅ 게시글이 성공적으로 불러와졌습니다!");
+//                    } catch (IOException e) {
+//                        System.out.println("❌ " + e.getMessage());
+//                    }
 
 
                 case "0":
@@ -148,6 +155,8 @@ public class Main {
         System.out.println("4️⃣  게시글 수정");
         System.out.println("5️⃣  게시글 삭제");
         System.out.println("6️⃣  게시글 검색");
+        System.out.println("7️⃣  파일 저장");
+        System.out.println("8️⃣  파일 불러오기");
         System.out.println("0️⃣  프로그램 종료");
         System.out.println("=====================================");
     }
