@@ -8,6 +8,7 @@ public class Post {
     private final LocalDateTime createdAt;
 
     public Post(int id, String title) {
+        validateTitle(title);
         this.id = id;
         this.title = title;
         this.createdAt = LocalDateTime.now();
@@ -21,12 +22,32 @@ public class Post {
         return this.title;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
     public boolean changeTitle(String newTitle) {
+        validateTitle(newTitle);
         this.title = newTitle;
         return true;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
+    private void validateTitle(String title) {
+        if (isTitleBlank(title)) {
+            throw new IllegalArgumentException("제목은 비어 있을 수 없습니다.");
+        }
+        if (isTitleOverLength(title)) {
+            throw new IllegalArgumentException("제목은 30자를 넘을 수 없습니다.");
+        }
     }
+
+    private boolean isTitleBlank(String title) {
+        return title == null || title.isBlank();
+    }
+
+    private boolean isTitleOverLength(String title) {
+        return title.length() > 30;
+    }
+
+
 }

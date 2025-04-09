@@ -13,11 +13,11 @@ public class PostService {
     private final PostUtil postUtil = new PostUtil();
     private static final long TIME_LIMIT = 180;
 
-    public boolean createPost(String title) {
-        if (isInvalidTitle(title)) return false;
+    public void createPost(String title) {
+        checkTitleDuplicated(title);
         int postId = postUtil.generatePostId();
         Post post = new Post(postId, title);
-        return postRepository.save(post) != null;
+        postRepository.save(post);
     }
 
     public List<Post> getAllPosts() {
@@ -31,19 +31,12 @@ public class PostService {
     public boolean updatePostTitle(int id, String newTitle) {
         Post post = postRepository.findPostById(id);
         if (post == null) return false;
-        if (isInvalidTitle(newTitle)) return false;
+        checkTitleDuplicated(newTitle);
         return post.changeTitle(newTitle);
     }
 
     public boolean deletePostById(int id) {
         return postRepository.delete(id);
-    }
-
-    // 제목 유효성 검사
-    private boolean isInvalidTitle(String title) {
-        return isBlank(title)
-                || title.length() > 30
-                || isTitleDuplicated(title);
     }
 
     // 게시글 작성 제한 시간 체크
@@ -56,16 +49,11 @@ public class PostService {
         return TIME_LIMIT - delay.getSeconds();
     }
 
-    public boolean isBlank(String title) {
-        return title == null || title.isBlank();
-    }
-
-    public boolean isTitleDuplicated(String title) {
+    public void checkTitleDuplicated(String title) {
         for (Post post : postRepository.findAll()) {
             if (post.getTitle().equals(title)) {
-                return true;
+                throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
             }
         }
-        return false;
     }
 }

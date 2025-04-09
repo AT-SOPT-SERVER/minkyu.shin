@@ -9,9 +9,8 @@ import java.util.List;
 public class PostRepository {
     List<Post> postList = new ArrayList<>();
 
-    public Post save(Post post) {
+    public void save(Post post) {
         postList.add(post);
-        return post;
     }
 
     public List<Post> findAll() {

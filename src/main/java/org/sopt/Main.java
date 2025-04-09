@@ -28,11 +28,11 @@ public class Main {
                     System.out.println("\n📝 [게시글 작성]");
                     System.out.print("📌 제목을 입력해주세요: ");
                     String title = scanner.nextLine();
-                    boolean created = controller.createPost(title);
-                    if (created) {
+                    try {
+                        controller.createPost(title);
                         System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
-                    } else {
-                        System.out.println("❌ 제목이 비어있거나 30자를 초과해선 안되고, 중복된 제목의 게시물도 작성 불가능합니다!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("❌ " + e.getMessage());
                     }
 
                     break;
@@ -66,13 +66,17 @@ public class Main {
                     int updateId = Integer.parseInt(scanner.nextLine());
                     System.out.print("📝 새 제목을 입력해주세요: ");
                     String newTitle = scanner.nextLine();
-                    boolean updated = controller.updatePostTitle(updateId, newTitle);
-                    if (updated) {
-                        System.out.println("✅ 게시다이 성공적으로 수정되었습니다.");
-                    } else {
-
-                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목이 올바르지 않습니다.");
+                    try {
+                        boolean updated = controller.updatePostTitle(updateId, newTitle);
+                        if (updated) {
+                            System.out.println("✅ 게시물 성공적으로 수정되었습니다.");
+                        } else {
+                            System.out.println("❌ 해당 ID의 게시글이 존재하지 않습니다.");
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("❌ " + e.getMessage());
                     }
+
                     break;
 
                 case "5":
