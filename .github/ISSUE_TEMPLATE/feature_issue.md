@@ -1,20 +1,15 @@
 ---
-name: Feature Issue
-about: Suggest an idea for this project
-title: "[feat] "
+name: feature Issue
+about: 구현한 기능
+title: "[✅Feat] "
 labels: enhancement
 assignees: ''
 ---
-## 📌 Task
+## Feature Issue
 
-### ⭐️ 필수 과제
-- [] 내용 입력
+> 기능에 대한 간단한 설명을 작성해주세요.
 
-### 🥇 선택 과제
-- [] 내용 입력
+## ✅ Todo
 
-### 💡 키워드 과제
-- [] 내용 입력
-
-### 🧾 과제 구현 조건 및 설계 가이드라인
-✅ 내용
+- [ ] 기능1
+- [ ] 기능2
