@@ -46,8 +46,8 @@ public class Post {
     }
 
     private boolean isTitleOverLength(String title) {
-        return title.length() > 30;
+//        return title.length() > 30;
+        return title.codePointCount(0, title.length()) > 30;
     }
-
 
 }
