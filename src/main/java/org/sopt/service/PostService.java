@@ -31,7 +31,7 @@ public class PostService {
     public boolean updatePostTitle(int id, String newTitle) {
         Post post = postRepository.findPostById(id);
         if (post == null) return false;
-        checkTitleDuplicated(newTitle);
+        checkTitleDuplicated(id, newTitle);
         return post.changeTitle(newTitle);
     }
 
@@ -51,6 +51,18 @@ public class PostService {
 
     public void checkTitleDuplicated(String title) {
         for (Post post : postRepository.findAll()) {
+            if (post.getTitle().equals(title)) {
+                throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
+            }
+        }
+    }
+
+    // 게시글 수정 시 기존의 제목과 같은지 확인하는 로직 추가
+    public void checkTitleDuplicated(int id, String title) {
+        for (Post post : postRepository.findAll()) {
+            if (post.getId() == id) {
+                throw new IllegalArgumentException("기존 제목과 동일합니다.");
+            }
             if (post.getTitle().equals(title)) {
                 throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
             }
