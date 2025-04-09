@@ -11,7 +11,6 @@ public class PostService {
 
     public void createPost(String title) {
         Post post = new Post(postId++, title);
-
         postRepository.save(post);
     }
 
@@ -23,7 +22,15 @@ public class PostService {
         return postRepository.findPostById(id);
     }
 
+    public boolean updatePostTitle(int id, String newTitle) {
+        Post post = postRepository.findPostById(id);
+        if (post == null) return false;
+        return post.changeTitle(newTitle);
+    }
+
     public boolean deletePostById(int id) {
         return postRepository.delete(id);
     }
+
+
 }

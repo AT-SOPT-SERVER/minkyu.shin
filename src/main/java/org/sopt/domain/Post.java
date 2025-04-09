@@ -16,4 +16,10 @@ public class Post {
     public String getTitle() {
         return this.title;
     }
+
+    public boolean changeTitle(String newTitle) {
+        this.title = newTitle;
+        return true;
+    }
+
 }
