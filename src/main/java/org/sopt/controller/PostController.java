@@ -3,6 +3,8 @@ package org.sopt.controller;
 import org.sopt.domain.Post;
 import org.sopt.service.PostService;
 
+import javax.imageio.IIOException;
+import java.io.IOException;
 import java.util.List;
 
 public class PostController {
@@ -29,13 +31,14 @@ public class PostController {
     }
 
     public List<Post> searchPostsByKeyword(String keyword) {
-        List<Post> allPosts = postService.getAllPosts();
-        return allPosts.stream()
-                .filter(post -> post.getTitle().contains(keyword))
-                .toList();
+        return null;
     }
 
     public long getPostDelay() {
-        return  postService.getPostDelay();
+        return postService.getPostDelay();
+    }
+
+    public void savePostToFile(int id) throws IOException {
+        postService.savePostToFile(id);
     }
 }

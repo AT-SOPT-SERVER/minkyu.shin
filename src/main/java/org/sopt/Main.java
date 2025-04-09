@@ -1,5 +1,6 @@
 package org.sopt;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import org.sopt.controller.PostController;
@@ -105,6 +106,23 @@ public class Main {
                         }
                     }
                     break;
+
+                case "7":
+                    System.out.println("\n📤 [파일 저장]");
+                    System.out.print("저장할 게시글 아이디를 입력해주세요: ");
+                    int saveId = Integer.parseInt(scanner.nextLine());
+                    try {
+                        controller.savePostToFile(saveId);
+                        System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
+                    } catch (IOException e) {
+                        System.out.println("❌ " + e.getMessage());
+                    }
+
+                case "8":
+                    System.out.println("\n📥 [파일 불러오기]");
+                    System.out.print("불러올 게시글 아이디를 입력해주세요: ");
+                    int loadId = Integer.parseInt(scanner.nextLine());
+
 
                 case "0":
                     System.out.println("\n👋 프로그램을 종료합니다. 감사합니다!");

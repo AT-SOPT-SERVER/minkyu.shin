@@ -4,6 +4,9 @@ import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
 import org.sopt.util.PostUtil;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,12 +63,16 @@ public class PostService {
     // 게시글 수정 시 기존의 제목과 같은지 확인하는 로직 추가
     public void checkTitleDuplicated(int id, String title) {
         for (Post post : postRepository.findAll()) {
-            if (post.getId() == id) {
-                throw new IllegalArgumentException("기존 제목과 동일합니다.");
-            }
-            if (post.getTitle().equals(title)) {
+            if (post.getTitle().equals(title) && post.getId() != id) {
                 throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
             }
         }
+    }
+
+    public void savePostToFile(int id) throws IOException {
+        Post post = postRepository.findPostById(id);
+        if (post == null) return;
+        BufferedWriter writer = new BufferedWriter(new FileWriter("post_" + id + ".txt"));
+        writer.write("🆔" + id + " | " + "📌 제목:" + post.getTitle());
     }
 }
