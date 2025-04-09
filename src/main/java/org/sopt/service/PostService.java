@@ -16,7 +16,7 @@ public class PostService {
     private final PostUtil postUtil = new PostUtil();
     private static final long TIME_LIMIT = 180;
 
-    public void createPost(String title) {
+    public void createPost(final String title) {
         checkTitleDuplicated(title);
         int postId = postUtil.generatePostId();
         Post post = new Post(postId, title);
@@ -27,22 +27,22 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post getPostById(int id) {
+    public Post getPostById(final int id) {
         return postRepository.findPostById(id);
     }
 
-    public boolean updatePostTitle(int id, String newTitle) {
+    public boolean updatePostTitle(final int id, final String newTitle) {
         checkTitleDuplicated(id, newTitle);
         Post post = postRepository.findPostById(id);
         if (post == null) return false;
         return post.changeTitle(newTitle);
     }
 
-    public boolean deletePostById(int id) {
+    public boolean deletePostById(final int id) {
         return postRepository.delete(id);
     }
 
-    public List<Post> searchPostsByKeyword(String keyword) {
+    public List<Post> searchPostsByKeyword(final String keyword) {
         List<Post> allPosts = postRepository.findAll();
         List<Post> result = new ArrayList<>();
         for (Post post : allPosts) {
@@ -64,7 +64,7 @@ public class PostService {
         return TIME_LIMIT - delay.getSeconds();
     }
 
-    public void checkTitleDuplicated(String title) {
+    public void checkTitleDuplicated(final String title) {
         for (Post post : postRepository.findAll()) {
             if (post.getTitle().equals(title)) {
                 throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
@@ -73,7 +73,7 @@ public class PostService {
     }
 
     // 게시글 수정 시 기존의 제목과 같은지 확인하는 로직 추가
-    public void checkTitleDuplicated(int id, String title) {
+    public void checkTitleDuplicated(final int id, final String title) {
         for (Post post : postRepository.findAll()) {
             if (post.getTitle().equals(title) && post.getId() != id) {
                 throw new IllegalArgumentException("중복된 제목의 게시물은 작성할 수 없습니다.");
@@ -81,14 +81,14 @@ public class PostService {
         }
     }
 
-    public void savePostToFile(String title) throws IOException {
+    public void savePostToFile(final String title) throws IOException {
         checkTitleDuplicated(title);
         int postId = postUtil.generatePostId();
         Post post = new Post(postId, title);
         postRepository.savePostToFile(post);
     }
 
-    public void loadPostFromFile(String fileName) throws IOException {
+    public void loadPostFromFile(final String fileName) throws IOException {
         String path = Paths.get("asset", fileName) + ".txt";
         File file = new File(path);
         if (!file.exists()) { throw new IOException("파일이 존재하지 않습니다.");}
