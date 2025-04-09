@@ -42,7 +42,7 @@ public class PostController {
         postService.savePostToFile(title);
     }
 
-//    public void loadPostFromFile(int loadId) {
-//        postService.loadPostFromFile(loadId);
-//    }
+    public void loadPostFromFile(String fileName) throws IOException {
+        postService.loadPostFromFile(fileName);
+    }
 }

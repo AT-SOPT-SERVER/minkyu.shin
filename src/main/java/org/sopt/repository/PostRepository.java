@@ -2,9 +2,7 @@ package org.sopt.repository;
 
 import org.sopt.domain.Post;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -56,4 +54,5 @@ public class PostRepository {
             throw new IOException("파일 저장에 실패했습니다.", e);
         }
     }
+
 }

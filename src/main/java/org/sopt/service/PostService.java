@@ -4,9 +4,8 @@ import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
 import org.sopt.utils.PostUtil;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,7 +76,19 @@ public class PostService {
         postRepository.savePostToFile(post);
     }
 
-//    public void loadPostFromFile(int loadId) {
-//        postRepository.loadPostFromFile(loadId);
-//    }
+    public void loadPostFromFile(String fileName) throws IOException {
+        String path = Paths.get("asset", fileName) + ".txt";
+        File file = new File(path);
+        if (!file.exists()) { throw new IOException("파일이 존재하지 않습니다.");}
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String content = reader.readLine(); // 첫 줄만 읽음
+            if (content == null || content.isBlank()) {
+                throw new IOException("파일 내용이 비어있습니다.");
+            }
+            createPost(content);
+        } catch (IOException e) {
+             throw new IOException("파일 읽기에 실패했습니다.", e);
+        }
+    }
 }

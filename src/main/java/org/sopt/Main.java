@@ -119,17 +119,17 @@ public class Main {
                     }
                     break;
 
-//                case "8":
-//                    System.out.println("\n📥 [파일 불러오기]");
-//                    System.out.print("불러올 파일명을 입력해주세요: ");
-//                    int loadId = Integer.parseInt(scanner.nextLine());
-//                    try {
-//                        controller.loadPostFromFile(loadId);
-//                        System.out.println("✅ 게시글이 성공적으로 불러와졌습니다!");
-//                    } catch (IOException e) {
-//                        System.out.println("❌ " + e.getMessage());
-//                    }
-
+                case "8":
+                    System.out.println("\n📥 [파일 불러오기]");
+                    System.out.print("불러올 파일명을 입력해주세요: ");
+                    String fileName = scanner.nextLine();
+                    try {
+                        controller.loadPostFromFile(fileName);
+                        System.out.println("✅ 게시글이 성공적으로 불러와졌습니다!");
+                    } catch (IOException e) {
+                        System.out.println("❌ " + e.getMessage());
+                    }
+                    break;
 
                 case "0":
                     System.out.println("\n👋 프로그램을 종료합니다. 감사합니다!");
