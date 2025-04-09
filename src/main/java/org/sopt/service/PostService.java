@@ -11,7 +11,8 @@ public class PostService {
 
     public boolean createPost(String title) {
         Post post = new Post(postId++, title);
-        if (title == null || title.isBlank()) return false;
+        if (isNotBlank(title)
+                || post.isOverMaxTitleLength(title)) return false;
         return postRepository.save(post) != null;
     }
 
@@ -25,12 +26,18 @@ public class PostService {
 
     public boolean updatePostTitle(int id, String newTitle) {
         Post post = postRepository.findPostById(id);
-        if (post == null) return false;
+        if (post == null
+                || isNotBlank(newTitle)
+                || post.isOverMaxTitleLength(newTitle)) return false;
         return post.changeTitle(newTitle);
     }
 
     public boolean deletePostById(int id) {
         return postRepository.delete(id);
+    }
+
+    public boolean isNotBlank(String title) {
+        return title != null && !title.isBlank();
     }
 
 

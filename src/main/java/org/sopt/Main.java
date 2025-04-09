@@ -63,9 +63,9 @@ public class Main {
                     String newTitle = scanner.nextLine();
                     boolean updated = controller.updatePostTitle(updateId, newTitle);
                     if (updated) {
-                        System.out.println("✅ 게시글이 성공적으로 수정되었습니다.");
+                        System.out.println("✅ 게시다이 성공적으로 수정되었습니다.");
                     } else {
-                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않습니다.");
+                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목 형식이 올바르지 않습니.");
                     }
                     break;
 
