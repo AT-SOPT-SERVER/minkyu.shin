@@ -20,6 +20,11 @@ public class Main {
 
             switch (input) {
                 case "1":
+                    long postDelay = controller.getPostDelay();
+                    if (postDelay > 0) {
+                        System.out.printf("⏳ 게시글 작성은 %d초 후에 가능합니다.\n", postDelay);
+                        break;
+                    }
                     System.out.println("\n📝 [게시글 작성]");
                     System.out.print("📌 제목을 입력해주세요: ");
                     String title = scanner.nextLine();
@@ -27,7 +32,7 @@ public class Main {
                     if (created) {
                         System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
                     } else {
-                        System.out.println("❌ 제목이 비어있거나 30자를 초과하지 않았는지, 혹은 중복된 제목이 아닌지 확인해주세요!");
+                        System.out.println("❌ 제목이 비어있거나 30자를 초과해선 안되고, 중복된 제목의 게시물도 작성 불가능합니다!");
                     }
 
                     break;
@@ -66,7 +71,7 @@ public class Main {
                         System.out.println("✅ 게시다이 성공적으로 수정되었습니다.");
                     } else {
 
-                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목 형식이 올바르지 않습니다.");
+                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목이 올바르지 않습니다.");
                     }
                     break;
 

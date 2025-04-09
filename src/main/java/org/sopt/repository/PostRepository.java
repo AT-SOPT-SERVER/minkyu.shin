@@ -3,6 +3,7 @@ package org.sopt.repository;
 import org.sopt.domain.Post;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class PostRepository {
@@ -35,5 +36,11 @@ public class PostRepository {
             }
         }
         return false;
+    }
+
+    public Post findLatestPost() {
+        return postList.stream()
+                .max(Comparator.comparing(Post::getCreatedAt))
+                .orElse(null);
     }
 }

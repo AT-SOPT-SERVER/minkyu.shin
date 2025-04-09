@@ -29,7 +29,13 @@ public class PostController {
     }
 
     public List<Post> searchPostsByKeyword(String keyword) {
-        return null;
+        List<Post> allPosts = postService.getAllPosts();
+        return allPosts.stream()
+                .filter(post -> post.getTitle().contains(keyword))
+                .toList();
     }
 
+    public long getPostDelay() {
+        return  postService.getPostDelay();
+    }
 }

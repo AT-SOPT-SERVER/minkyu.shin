@@ -4,11 +4,14 @@ import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
 import org.sopt.util.PostUtil;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class PostService {
     private final PostRepository postRepository = new PostRepository();
     private final PostUtil postUtil = new PostUtil();
+    private static final long TIME_LIMIT = 180;
 
     public boolean createPost(String title) {
         if (isInvalidTitle(title)) return false;
@@ -43,6 +46,16 @@ public class PostService {
                 || isTitleDuplicated(title);
     }
 
+    // 게시글 작성 제한 시간 체크
+    public long getPostDelay() {
+        Post latestPost = postRepository.findLatestPost();
+        if (latestPost == null) return 0;
+
+        LocalDateTime latestPostTime = latestPost.getCreatedAt();
+        Duration delay = Duration.between(latestPostTime, LocalDateTime.now());
+        return TIME_LIMIT - delay.getSeconds();
+    }
+
     public boolean isBlank(String title) {
         return title == null || title.isBlank();
     }
@@ -55,8 +68,4 @@ public class PostService {
         }
         return false;
     }
-
-
-
-
 }
