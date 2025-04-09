@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostService {
@@ -39,6 +40,17 @@ public class PostService {
 
     public boolean deletePostById(int id) {
         return postRepository.delete(id);
+    }
+
+    public List<Post> searchPostsByKeyword(String keyword) {
+        List<Post> allPosts = postRepository.findAll();
+        List<Post> result = new ArrayList<>();
+        for (Post post : allPosts) {
+            if (post.getTitle().contains(keyword)) {
+                result.add(post);
+            }
+        }
+        return result;
     }
 
 
@@ -91,4 +103,6 @@ public class PostService {
              throw new IOException("파일 읽기에 실패했습니다.", e);
         }
     }
+
+
 }
