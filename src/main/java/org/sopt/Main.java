@@ -23,8 +23,13 @@ public class Main {
                     System.out.println("\n📝 [게시글 작성]");
                     System.out.print("📌 제목을 입력해주세요: ");
                     String title = scanner.nextLine();
-                    controller.createPost(title);
-                    System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
+                    boolean created = controller.createPost(title);
+                    if (created) {
+                        System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
+                    } else {
+                        System.out.println("❌ 제목이 비어있는 경우 게시물 작성이 불가능합니다!");
+                    }
+
                     break;
 
                 case "2":

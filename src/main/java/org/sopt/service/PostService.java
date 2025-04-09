@@ -9,9 +9,10 @@ public class PostService {
     private final PostRepository postRepository = new PostRepository();
     private int postId = 1;
 
-    public void createPost(String title) {
+    public boolean createPost(String title) {
         Post post = new Post(postId++, title);
-        postRepository.save(post);
+        if (title == null || title.isBlank()) return false;
+        return postRepository.save(post) != null;
     }
 
     public List<Post> getAllPosts() {
