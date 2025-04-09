@@ -27,7 +27,7 @@ public class Main {
                     if (created) {
                         System.out.println("✅ 게시글이 성공적으로 저장되었습니다!");
                     } else {
-                        System.out.println("❌ 제목이 비어있는 경우 게시물 작성이 불가능합니다!");
+                        System.out.println("❌ 제목이 비어있거나 30자를 초과하지 않았는지, 혹은 중복된 제목이 아닌지 확인해주세요!");
                     }
 
                     break;
@@ -65,7 +65,8 @@ public class Main {
                     if (updated) {
                         System.out.println("✅ 게시다이 성공적으로 수정되었습니다.");
                     } else {
-                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목 형식이 올바르지 않습니.");
+
+                        System.out.println("❌ 해당 ID의 게시글이 존재하지 않거나 제목 형식이 올바르지 않습니다.");
                     }
                     break;
 

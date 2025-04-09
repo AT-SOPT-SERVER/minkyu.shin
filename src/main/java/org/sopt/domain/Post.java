@@ -22,8 +22,4 @@ public class Post {
         return true;
     }
 
-    public boolean isOverMaxTitleLength(String title) {
-        return title.length() > 30;
-    }
-
 }

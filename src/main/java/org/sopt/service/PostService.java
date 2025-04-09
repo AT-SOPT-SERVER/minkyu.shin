@@ -2,17 +2,18 @@ package org.sopt.service;
 
 import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
+import org.sopt.util.PostUtil;
 
 import java.util.List;
 
 public class PostService {
     private final PostRepository postRepository = new PostRepository();
-    private int postId = 1;
+    private final PostUtil postUtil = new PostUtil();
 
     public boolean createPost(String title) {
-        Post post = new Post(postId++, title);
-        if (isNotBlank(title)
-                || post.isOverMaxTitleLength(title)) return false;
+        if (isInvalidTitle(title)) return false;
+        int postId = postUtil.generatePostId();
+        Post post = new Post(postId, title);
         return postRepository.save(post) != null;
     }
 
@@ -26,9 +27,8 @@ public class PostService {
 
     public boolean updatePostTitle(int id, String newTitle) {
         Post post = postRepository.findPostById(id);
-        if (post == null
-                || isNotBlank(newTitle)
-                || post.isOverMaxTitleLength(newTitle)) return false;
+        if (post == null) return false;
+        if (isInvalidTitle(newTitle)) return false;
         return post.changeTitle(newTitle);
     }
 
@@ -36,9 +36,27 @@ public class PostService {
         return postRepository.delete(id);
     }
 
-    public boolean isNotBlank(String title) {
-        return title != null && !title.isBlank();
+    // 제목 유효성 검사
+    private boolean isInvalidTitle(String title) {
+        return isBlank(title)
+                || title.length() > 30
+                || isTitleDuplicated(title);
     }
+
+    public boolean isBlank(String title) {
+        return title == null || title.isBlank();
+    }
+
+    public boolean isTitleDuplicated(String title) {
+        for (Post post : postRepository.findAll()) {
+            if (post.getTitle().equals(title)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 
 }
