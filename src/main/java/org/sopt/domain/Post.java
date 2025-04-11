@@ -26,10 +26,9 @@ public class Post {
         return this.createdAt;
     }
 
-    public boolean changeTitle(String newTitle) {
+    public void changeTitle(String newTitle) {
         validateTitle(newTitle);
         this.title = newTitle;
-        return true;
     }
 
     private void validateTitle(String title) {

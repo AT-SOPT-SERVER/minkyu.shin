@@ -11,7 +11,7 @@
 
 ---
 
-## 🔥 Trouble Shooting
+## 🔥 이런 고민들을 했습니다!
 - 문제 상황 & 해결 방법 간단 정리  
   예: API 통신 에러 → JSON 파싱 오류 → ObjectMapper 설정 추가로 해결
 

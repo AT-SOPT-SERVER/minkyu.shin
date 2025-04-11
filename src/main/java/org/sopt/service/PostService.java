@@ -28,14 +28,13 @@ public class PostService {
     }
 
     public Post getPostById(final int id) {
-        return postRepository.findPostById(id);
+        return postRepository.findPostByIdOrThrow(id);
     }
 
-    public boolean updatePostTitle(final int id, final String newTitle) {
+    public void updatePostTitle(final int id, final String newTitle) {
         checkTitleDuplicated(id, newTitle);
-        Post post = postRepository.findPostById(id);
-        if (post == null) return false;
-        return post.changeTitle(newTitle);
+        Post post = postRepository.findPostByIdOrThrow(id); // null 체크 제거
+        post.changeTitle(newTitle);
     }
 
     public boolean deletePostById(final int id) {

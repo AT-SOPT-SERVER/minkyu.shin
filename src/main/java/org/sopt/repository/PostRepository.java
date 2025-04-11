@@ -20,14 +20,13 @@ public class PostRepository {
         return postList;
     }
 
-    public Post findPostById(int id) {
+    public Post findPostByIdOrThrow(int id) {
         for (Post post : postList) {
             if (post.getId() == id) {
                 return post;
             }
         }
-
-        return null;
+        throw new IllegalArgumentException("해당 ID의 게시글이 존재하지 않습니다.");
     }
 
     public boolean delete(int id) {
