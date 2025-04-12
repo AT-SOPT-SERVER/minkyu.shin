@@ -2,7 +2,7 @@ package org.sopt.service;
 
 import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
-import org.sopt.utils.PostUtil;
+import org.sopt.utils.IdGenerator;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -13,12 +13,12 @@ import java.util.List;
 
 public class PostService {
     private final PostRepository postRepository = new PostRepository();
-    private final PostUtil postUtil = new PostUtil();
+    private final IdGenerator idGenerator = new IdGenerator();
     private static final long TIME_LIMIT = 180;
 
     public void createPost(final String title) {
         checkTitleDuplicated(title);
-        int postId = postUtil.generatePostId();
+        int postId = idGenerator.generatePostId();
         Post post = new Post(postId, title);
         postRepository.save(post);
     }
@@ -82,7 +82,7 @@ public class PostService {
 
     public void savePostToFile(final String title) throws IOException {
         checkTitleDuplicated(title);
-        int postId = postUtil.generatePostId();
+        int postId = idGenerator.generatePostId();
         Post post = new Post(postId, title);
         postRepository.savePostToFile(post);
     }
@@ -102,6 +102,5 @@ public class PostService {
              throw new IOException("파일 읽기에 실패했습니다.", e);
         }
     }
-
 
 }

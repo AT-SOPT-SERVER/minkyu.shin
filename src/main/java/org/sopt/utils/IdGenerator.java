@@ -1,7 +1,7 @@
 package org.sopt.utils;
 
-public class PostUtil {
-    private static int postId = 0;
+public class IdGenerator {
+    private static int postId = 1;
 
     public int generatePostId() {
         return postId++;
