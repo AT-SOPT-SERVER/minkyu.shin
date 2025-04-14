@@ -1,6 +1,6 @@
 ---
 name: documentation
-about: 과제
+about: 이번 과제
 title: "[Task] "
 labels: documentation
 assignees: ''
