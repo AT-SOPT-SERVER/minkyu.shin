@@ -1,5 +1,5 @@
 ---
-name: task issue
+name: documentation
 about: 과제
 title: "[Task] "
 labels: documentation

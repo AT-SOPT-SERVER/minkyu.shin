@@ -1,5 +1,5 @@
 ---
-name: Bug Report
+name: bug report
 about: 개발 중 발생한 버그 리포트
 title: "[bug] "
 labels: bug
