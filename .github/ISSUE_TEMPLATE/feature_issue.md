@@ -1,7 +1,7 @@
 ---
 name: feature Issue
 about: 구현한 기능
-title: "[✅Feat] "
+title: "[Feat] "
 labels: enhancement
 assignees: ''
 ---

@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: 개발 중 발생한 버그 리포트
-title: "[⚠️Bug] "
+title: "[bug] "
 labels: bug
 assignees: ''
 ---

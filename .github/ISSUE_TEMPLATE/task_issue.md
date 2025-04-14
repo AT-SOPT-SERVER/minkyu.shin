@@ -1,7 +1,7 @@
 ---
 name: task issue
 about: 과제
-title: "[📌Task] "
+title: "[Task] "
 labels: documentation
 assignees: ''
 ---
