@@ -17,6 +17,7 @@ public abstract class BaseTimeEntity {
     @Column(updatable = false, nullable = false)
     private OffsetDateTime createdAt;
 
-    @LastModifiedDate
-    private OffsetDateTime updatedAt;
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

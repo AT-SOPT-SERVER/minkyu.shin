@@ -1,7 +1,12 @@
 package org.sopt.domain.post.service;
 
 import org.sopt.domain.post.domain.Post;
+import org.sopt.domain.post.dto.PostDto;
+import org.sopt.domain.post.dto.request.CreatePostRequest;
+import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.repository.PostRepository;
+import org.sopt.global.exception.BusinessException;
+import org.sopt.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -18,28 +23,32 @@ public class PostService {
     }
     private static final long TIME_LIMIT = 180;
 
-    public void createPost(String title) {
-        Post post = new Post(title);
+    public PostDto createPost(final CreatePostRequest request) {
+
+        var post = Post.createPost(request.title());
         postRepository.save(post);
-        System.out.println(post.getTitle());
+        return PostDto.from(post);
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostDto> getAllPosts() {
+        return postRepository.findAll().stream().map(PostDto::from).toList();
     }
 
-    public Post getPostById(final int id) {
-        return postRepository.findPostByIdOrThrow(id);
+    public PostDto getPostById(final Long id) {
+        var post = postRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
+        return PostDto.from(post);
     }
 
-    public void updatePostTitle(final int id, final String newTitle) {
-        checkTitleDuplicated(id, newTitle);
-        Post post = postRepository.findPostByIdOrThrow(id); // null 체크 제거
-        post.changeTitle(newTitle);
+    public PostDto updatePostTitle(final Long id, final UpdatePostRequest request) {
+        var post = postRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
+        post.changeTitle(request.title());
+        return PostDto.from(post);
     }
 
-    public boolean deletePostById(final int id) {
-        return postRepository.delete(id);
+    public void deletePostById(final Long id) {
+        postRepository.deleteById(id);
     }
 
     public List<Post> searchPostsByKeyword(final String keyword) {

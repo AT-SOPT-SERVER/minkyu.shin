@@ -1,49 +1,71 @@
 package org.sopt.domain.post.controller;
 
 import org.sopt.domain.post.domain.Post;
-import org.sopt.domain.post.dto.PostRequest;
+import org.sopt.domain.post.dto.PostDto;
+import org.sopt.domain.post.dto.request.CreatePostRequest;
+import org.sopt.domain.post.dto.request.UpdatePostRequest;
+import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
+import org.sopt.domain.post.util.PostRequestValidator;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 import org.sopt.global.exception.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/post")
 public class PostController {
     private final PostService postService;
+    private final PostRequestValidator postRequestValidator;
 
-    public PostController(PostService postService) {
+    public PostController(
+            PostService postService,
+            PostRequestValidator postRequestValidator) {
         this.postService = postService;
+        this.postRequestValidator = postRequestValidator;
     }
 
 
-    @PostMapping("/post")
-    public void createPost(@RequestBody final PostRequest postRequest) {
-        postService.createPost(postRequest.getTitle());
+    @PostMapping
+    public ResponseEntity<PostDto> createPost(
+            @RequestBody final CreatePostRequest createPostRequest) {
+        postRequestValidator.validateTitle(createPostRequest.title());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postService.createPost(createPostRequest));
     }
 
-    @GetMapping("/posts")
-    public ResponseEntity<?> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    @GetMapping
+    public ResponseEntity<GetPostListResponse> getAllPosts() {
+        return ResponseEntity.ok(GetPostListResponse.of(postService.getAllPosts()));
     }
 
-    public Post getPostById(final int id) {
-        return postService.getPostById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable final Long id) {
+        return ResponseEntity.ok(postService.getPostById(id));
     }
 
-    public void updatePostTitle(final int id, final String newTitle) {
-        postService.updatePostTitle(id, newTitle);
+    @PatchMapping("/{id}")
+    public ResponseEntity<PostDto> updatePostTitle(
+            @PathVariable final Long id,
+            @RequestBody final UpdatePostRequest updatePostRequest) {
+        postRequestValidator.validateTitle(updatePostRequest.title());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(postService.updatePostTitle(id, updatePostRequest));
     }
 
-    public boolean deletePostById(final int id) {
-        return postService.deletePostById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePostById(@PathVariable final Long id) {
+        postService.deletePostById(id);
+        return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/search")
     public List<Post> searchPostsByKeyword(String keyword) {
+
         return postService.searchPostsByKeyword(keyword);
     }
 

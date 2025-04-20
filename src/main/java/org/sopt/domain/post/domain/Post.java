@@ -3,17 +3,16 @@ package org.sopt.domain.post.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.sopt.global.entity.BaseTimeEntity;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 
-import java.time.LocalDateTime;
-
 @Entity
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     private String title;
 
 
@@ -24,14 +23,9 @@ public class Post {
         this.title = title;
     }
 
-    public int getId() {
-        return this.id;
+    public static Post createPost(String title) {
+        return new Post(title);
     }
-
-    public String getTitle() {
-        return this.title;
-    }
-
 
     public void changeTitle(String newTitle) {
         validateTitle(newTitle);
@@ -52,8 +46,15 @@ public class Post {
     }
 
     private boolean isTitleOverLength(String title) {
-//        return title.length() > 30;
         return title.codePointCount(0, title.length()) > 30;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
 }
