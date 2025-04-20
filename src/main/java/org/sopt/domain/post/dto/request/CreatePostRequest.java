@@ -1,11 +1,11 @@
 package org.sopt.domain.post.dto.request;
 
-import org.sopt.domain.post.util.PostRequestValidation;
+import org.sopt.domain.post.util.PostRequestValidator;
 
 public record CreatePostRequest(
         String title
 ) {
     public void validate() {
-        PostRequestValidation.validateInput(title);
+        PostRequestValidator.validateInput(title);
     }
 }

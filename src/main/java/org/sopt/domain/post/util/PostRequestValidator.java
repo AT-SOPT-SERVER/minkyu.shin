@@ -5,7 +5,7 @@ import org.sopt.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PostRequestValidation {
+public class PostRequestValidator {
 
     public static void validateInput(String input) {
         if (input == null || input.isBlank()) {

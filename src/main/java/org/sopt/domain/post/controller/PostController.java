@@ -5,7 +5,7 @@ import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
-import org.sopt.domain.post.util.PostRequestValidation;
+import org.sopt.domain.post.util.PostRequestValidator;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 import org.sopt.global.exception.ErrorResponse;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
-    private final PostRequestValidation postRequestValidation;
+    private final PostRequestValidator postRequestValidator;
 
     public PostController(
             PostService postService,
-            PostRequestValidation postRequestValidation) {
+            PostRequestValidator postRequestValidator) {
         this.postService = postService;
-        this.postRequestValidation = postRequestValidation;
+        this.postRequestValidator = postRequestValidator;
     }
 
 
