@@ -1,7 +1,7 @@
 package org.sopt.domain.post.service;
 
 import org.sopt.domain.post.domain.Post;
-import org.sopt.domain.post.repository.repository.PostRepository;
+import org.sopt.domain.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -52,7 +52,6 @@ public class PostService {
         }
         return result;
     }
-
 
     // 게시글 작성 제한 시간 체크
     public long getPostDelay() {

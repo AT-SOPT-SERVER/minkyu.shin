@@ -1,22 +1,27 @@
 package org.sopt.domain.post.domain;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.sopt.global.exception.BusinessException;
+import org.sopt.global.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class Post {
 
     @Id
     @GeneratedValue
     private int id;
     private String title;
-    private final LocalDateTime createdAt;
+
+
+    public Post() {}
 
     public Post(String title) {
         validateTitle(title);
         this.title = title;
-        this.createdAt = LocalDateTime.now();
     }
 
     public int getId() {
@@ -27,9 +32,6 @@ public class Post {
         return this.title;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return this.createdAt;
-    }
 
     public void changeTitle(String newTitle) {
         validateTitle(newTitle);
@@ -38,10 +40,10 @@ public class Post {
 
     private void validateTitle(String title) {
         if (isTitleBlank(title)) {
-            throw new IllegalArgumentException("제목은 비어 있을 수 없습니다.");
+            throw new BusinessException(ErrorCode.POST_TITLE_BLANK_EXCEPTION);
         }
         if (isTitleOverLength(title)) {
-            throw new IllegalArgumentException("제목은 30자를 넘을 수 없습니다.");
+            throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
         }
     }
 

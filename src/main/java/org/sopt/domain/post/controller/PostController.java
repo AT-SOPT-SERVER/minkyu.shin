@@ -1,13 +1,13 @@
-package org.sopt.controller;
+package org.sopt.domain.post.controller;
 
 import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.dto.PostRequest;
 import org.sopt.domain.post.service.PostService;
+import org.sopt.global.exception.BusinessException;
+import org.sopt.global.exception.ErrorCode;
+import org.sopt.global.exception.ErrorResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,11 +51,12 @@ public class PostController {
         return postService.getPostDelay();
     }
 
-    public void savePostToFile(String title) throws IOException {
-        postService.savePostToFile(title);
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(new ErrorResponse(errorCode.getMessage()));
     }
 
-    public void loadPostFromFile(String fileName) throws IOException {
-        postService.loadPostFromFile(fileName);
-    }
 }

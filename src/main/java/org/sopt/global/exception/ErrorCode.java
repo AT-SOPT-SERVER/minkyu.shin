@@ -11,19 +11,18 @@ public enum ErrorCode {
     INVALID_TITLE_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "제목은 30자 이하로 작성해야 합니다."),;
 
     private final HttpStatus httpStatus;
-    private final String msg;
+    private final String message;
 
-    ErrorCode(HttpStatus httpStatus, String msg) {
+    ErrorCode(HttpStatus httpStatus, String message) {
         this.httpStatus = httpStatus;
-        this.msg = msg;
+        this.message = message;
     }
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
 
-
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 }
