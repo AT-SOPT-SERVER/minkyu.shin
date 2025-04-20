@@ -14,11 +14,9 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT p FROM Post p"
-            + " ORDER BY p.createdAt DESC "
-            + " LIMIT 1")
-    Optional<Post> findLatestPost();
-
     boolean existsPostByTitle(String title);
 
+    List<Post> findAllByTitleContaining(String title);
+
+    Optional<Post> findTopByOrderByCreatedAtDesc();
 }

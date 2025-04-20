@@ -48,6 +48,12 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<GetPostListResponse> searchPostsByKeyword(
+            @RequestParam String keyword) {
+        return ResponseEntity.ok(GetPostListResponse.of(postService.searchPostsByKeyword(keyword)));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<PostDto> updatePostTitle(
             @PathVariable final Long id,
@@ -61,12 +67,6 @@ public class PostController {
     public ResponseEntity<Void> deletePostById(@PathVariable final Long id) {
         postService.deletePostById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<GetPostListResponse> searchPostsByKeyword(
-            @RequestParam String keyword) {
-        return ResponseEntity.ok(GetPostListResponse.of(postService.searchPostsByKeyword(keyword)));
     }
 
 
