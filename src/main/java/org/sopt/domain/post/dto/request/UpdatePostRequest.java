@@ -1,11 +1,11 @@
 package org.sopt.domain.post.dto.request;
 
-import org.sopt.domain.post.util.PostRequestValidator;
+import org.sopt.domain.post.util.PostRequestValidation;
 
 public record UpdatePostRequest(
         String title
 ) {
-    public void validate(PostRequestValidator postRequestValidator) {
-        postRequestValidator.validateTitle(title);
+    public void validate() {
+        PostRequestValidation.validateInput(title);
     }
 }

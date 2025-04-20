@@ -1,12 +1,11 @@
 package org.sopt.domain.post.controller;
 
-import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
-import org.sopt.domain.post.util.PostRequestValidator;
+import org.sopt.domain.post.util.PostRequestValidation;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 import org.sopt.global.exception.ErrorResponse;
@@ -14,26 +13,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
-    private final PostRequestValidator postRequestValidator;
+    private final PostRequestValidation postRequestValidation;
 
     public PostController(
             PostService postService,
-            PostRequestValidator postRequestValidator) {
+            PostRequestValidation postRequestValidation) {
         this.postService = postService;
-        this.postRequestValidator = postRequestValidator;
+        this.postRequestValidation = postRequestValidation;
     }
 
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(
             @RequestBody final CreatePostRequest createPostRequest) {
-        createPostRequest.validate(postRequestValidator);
+        createPostRequest.validate();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.createPost(createPostRequest));
     }
@@ -58,7 +55,7 @@ public class PostController {
     public ResponseEntity<PostDto> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        updatePostRequest.validate(postRequestValidator);
+        updatePostRequest.validate();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.updatePostTitle(id, updatePostRequest));
     }

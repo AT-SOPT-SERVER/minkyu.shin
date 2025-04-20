@@ -3,6 +3,7 @@ package org.sopt.domain.post.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.sopt.domain.post.util.TextLengthUtil;
 import org.sopt.global.entity.BaseTimeEntity;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
@@ -33,20 +34,20 @@ public class Post extends BaseTimeEntity {
     }
 
     private void validateTitle(String title) {
-        if (isTitleBlank(title)) {
-            throw new BusinessException(ErrorCode.POST_TITLE_BLANK_EXCEPTION);
+        validateBlank(title);
+        validateLength(title);
+    }
+
+    private void validateBlank(String text) {
+        if (text == null || text.isBlank()) {
+            throw new BusinessException(ErrorCode.INPUT_BLANK_EXCEPTION);
         }
-        if (isTitleOverLength(title)) {
+    }
+
+    private void validateLength(String text) {
+        if (TextLengthUtil.visibleLength(text) > 30) {
             throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
         }
-    }
-
-    private boolean isTitleBlank(String title) {
-        return title == null || title.isBlank();
-    }
-
-    private boolean isTitleOverLength(String title) {
-        return title.codePointCount(0, title.length()) > 30;
     }
 
     public long getId() {
