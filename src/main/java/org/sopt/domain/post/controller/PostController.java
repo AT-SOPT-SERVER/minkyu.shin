@@ -33,7 +33,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostDto> createPost(
             @RequestBody final CreatePostRequest createPostRequest) {
-        postRequestValidator.validateTitle(createPostRequest.title());
+        createPostRequest.validate(postRequestValidator);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.createPost(createPostRequest));
     }
@@ -52,7 +52,7 @@ public class PostController {
     public ResponseEntity<PostDto> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        postRequestValidator.validateTitle(updatePostRequest.title());
+        updatePostRequest.validate(postRequestValidator);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.updatePostTitle(id, updatePostRequest));
     }
@@ -64,14 +64,11 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public List<Post> searchPostsByKeyword(String keyword) {
-
-        return postService.searchPostsByKeyword(keyword);
+    public ResponseEntity<GetPostListResponse> searchPostsByKeyword(
+            @RequestParam String keyword) {
+        return ResponseEntity.ok(GetPostListResponse.of(postService.searchPostsByKeyword(keyword)));
     }
 
-    public long getPostDelay() {
-        return postService.getPostDelay();
-    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
