@@ -1,12 +1,14 @@
 package org.sopt.repository;
 
 import org.sopt.domain.Post;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Repository
 public class PostRepository {
     List<Post> postList = new ArrayList<>();
 

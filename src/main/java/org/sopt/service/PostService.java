@@ -3,6 +3,7 @@ package org.sopt.service;
 import org.sopt.domain.Post;
 import org.sopt.repository.PostRepository;
 import org.sopt.utils.IdGenerator;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -11,16 +12,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class PostService {
-    private final PostRepository postRepository = new PostRepository();
-    private final IdGenerator idGenerator = new IdGenerator();
+    private final PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
     private static final long TIME_LIMIT = 180;
 
-    public void createPost(final String title) {
-        checkTitleDuplicated(title);
-        int postId = idGenerator.generatePostId();
-        Post post = new Post(postId, title);
+    public void createPost(String title) {
+        Post post = new Post(IdGenerator.generatePostId(), title);
         postRepository.save(post);
+        System.out.println(post.getTitle());
     }
 
     public List<Post> getAllPosts() {
@@ -82,7 +86,7 @@ public class PostService {
 
     public void savePostToFile(final String title) throws IOException {
         checkTitleDuplicated(title);
-        int postId = idGenerator.generatePostId();
+        int postId = IdGenerator.generatePostId();
         Post post = new Post(postId, title);
         postRepository.savePostToFile(post);
     }
