@@ -1,12 +1,9 @@
-package org.sopt.service;
+package org.sopt.domain.post.service;
 
-import org.sopt.domain.Post;
-import org.sopt.repository.PostRepository;
-import org.sopt.utils.IdGenerator;
+import org.sopt.domain.post.domain.Post;
+import org.sopt.domain.post.repository.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +19,7 @@ public class PostService {
     private static final long TIME_LIMIT = 180;
 
     public void createPost(String title) {
-        Post post = new Post(IdGenerator.generatePostId(), title);
+        Post post = new Post(title);
         postRepository.save(post);
         System.out.println(post.getTitle());
     }
@@ -84,27 +81,6 @@ public class PostService {
         }
     }
 
-    public void savePostToFile(final String title) throws IOException {
-        checkTitleDuplicated(title);
-        int postId = IdGenerator.generatePostId();
-        Post post = new Post(postId, title);
-        postRepository.savePostToFile(post);
-    }
 
-    public void loadPostFromFile(final String fileName) throws IOException {
-        String path = Paths.get("asset", fileName) + ".txt";
-        File file = new File(path);
-        if (!file.exists()) { throw new IOException("파일이 존재하지 않습니다.");}
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String content = reader.readLine(); // 첫 줄만 읽음
-            if (content == null || content.isBlank()) {
-                throw new IOException("파일 내용이 비어있습니다.");
-            }
-            createPost(content);
-        } catch (IOException e) {
-             throw new IOException("파일 읽기에 실패했습니다.", e);
-        }
-    }
 
 }

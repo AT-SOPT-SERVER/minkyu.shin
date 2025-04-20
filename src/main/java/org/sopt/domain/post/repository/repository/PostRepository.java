@@ -1,6 +1,6 @@
-package org.sopt.repository;
+package org.sopt.domain.post.repository.repository;
 
-import org.sopt.domain.Post;
+import org.sopt.domain.post.domain.Post;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;

@@ -1,15 +1,20 @@
-package org.sopt.domain;
+package org.sopt.domain.post.domain;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
 public class Post {
+
+    @Id
+    @GeneratedValue
     private int id;
     private String title;
     private final LocalDateTime createdAt;
 
-    public Post(int id, String title) {
+    public Post(String title) {
         validateTitle(title);
-        this.id = id;
         this.title = title;
         this.createdAt = LocalDateTime.now();
     }

@@ -1,15 +1,14 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Post;
-import org.sopt.dto.PostRequest;
-import org.sopt.service.PostService;
+import org.sopt.domain.post.domain.Post;
+import org.sopt.domain.post.dto.PostRequest;
+import org.sopt.domain.post.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.List;
 

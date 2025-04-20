@@ -1,4 +1,4 @@
-package org.sopt.dto;
+package org.sopt.domain.post.dto;
 
 public class PostRequest {
     private String title;
