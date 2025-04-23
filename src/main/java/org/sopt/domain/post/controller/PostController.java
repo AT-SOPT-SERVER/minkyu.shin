@@ -17,20 +17,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
-    private final PostRequestValidator postRequestValidator;
 
     public PostController(
-            PostService postService,
-            PostRequestValidator postRequestValidator) {
+            PostService postService) {
         this.postService = postService;
-        this.postRequestValidator = postRequestValidator;
     }
 
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(
             @RequestBody final CreatePostRequest createPostRequest) {
-        createPostRequest.validate();
+        PostRequestValidator.validateInput(createPostRequest.title());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.createPost(createPostRequest));
     }
@@ -55,7 +52,7 @@ public class PostController {
     public ResponseEntity<PostDto> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        updatePostRequest.validate();
+        PostRequestValidator.validateInput(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postService.updatePostTitle(id, updatePostRequest));
     }
