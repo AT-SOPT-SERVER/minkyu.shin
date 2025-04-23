@@ -9,7 +9,7 @@ public class PostRequestValidator {
 
     public static void validateInput(String input) {
         if (input == null || input.isBlank()) {
-            throw new BusinessException(ErrorCode.INPUT_BLANK_EXCEPTION);
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
     }
 }

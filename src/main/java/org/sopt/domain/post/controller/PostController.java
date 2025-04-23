@@ -63,13 +63,4 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
-        ErrorCode errorCode = exception.getErrorCode();
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(new ErrorResponse(errorCode.getMessage()));
-    }
-
 }
