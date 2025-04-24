@@ -1,5 +1,6 @@
 package org.sopt.domain.post.service;
 
+import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
@@ -18,7 +19,6 @@ import java.util.List;
 @Service
 public class PostService {
 
-    private static final Integer TIME_LIMIT = 180;
     private final PostRepository postRepository;
 
     public PostService(PostRepository postRepository) {
@@ -64,8 +64,8 @@ public class PostService {
     }
 
 
-    private void validateDuplicatedTitle(String request) {
-        if (postRepository.existsPostByTitle(request)) {
+    private void validateDuplicatedTitle(final String title) {
+        if (postRepository.existsPostByTitle(title)) {
             throw new BusinessException(ErrorCode.DUPLICATED_TITLE_EXCEPTION);
         }
     }
@@ -73,8 +73,8 @@ public class PostService {
     private void validatePostDelay() {
         postRepository.findTopByOrderByCreatedAtDesc()
                 .ifPresent(lastPost -> {
-                    Duration diff = Duration.between(lastPost.getCreatedAt(), OffsetDateTime.now());
-                    if (diff.getSeconds() < TIME_LIMIT) {
+                    Duration delay = Duration.between(lastPost.getCreatedAt(), OffsetDateTime.now());
+                    if (delay.getSeconds() < PostPolicyConstant.POST_DELAY_SECONDS.getValue()) {
                         throw new BusinessException(ErrorCode.POST_DELAY_EXCEPTION);
                     }
                 });

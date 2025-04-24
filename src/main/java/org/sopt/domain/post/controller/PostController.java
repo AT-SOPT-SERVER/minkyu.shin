@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
 
@@ -41,11 +41,11 @@ public class PostController {
 
     @GetMapping("/search")
     public ResponseEntity<GetPostListResponse> searchPostsByKeyword(
-            @RequestParam String keyword) {
+            @RequestParam final String keyword) {
         return ResponseEntity.ok(GetPostListResponse.of(postService.searchPostsByKeyword(keyword)));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {

@@ -3,6 +3,7 @@ package org.sopt.domain.post.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.domain.post.util.TextLengthUtil;
 import org.sopt.global.entity.BaseTimeEntity;
 import org.sopt.global.exception.BusinessException;
@@ -45,7 +46,7 @@ public class Post extends BaseTimeEntity {
     }
 
     private void validateLength(String text) {
-        if (TextLengthUtil.visibleLength(text) > 30) {
+        if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.TITLE_MAX_LENGTH.getValue()) {
             throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
         }
     }
