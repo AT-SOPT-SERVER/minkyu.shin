@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
-    private final PostRequestValidator postRequestValidator;
 
     public PostController(
-            PostService postService,
-            PostRequestValidator postRequestValidator) {
+            PostService postService) {
         this.postService = postService;
-        this.postRequestValidator = postRequestValidator;
     }
 
 
@@ -45,7 +42,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping
     public ResponseEntity<GetPostListResponse> searchPostsByKeyword(
             @RequestParam String keyword) {
         return ResponseEntity.ok(GetPostListResponse.of(postService.searchPostsByKeyword(keyword)));
