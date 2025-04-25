@@ -5,7 +5,4 @@ import org.sopt.domain.post.util.PostRequestValidator;
 public record CreatePostRequest(
         String title
 ) {
-    public void validate() {
-        PostRequestValidator.validateInput(title);
-    }
 }
