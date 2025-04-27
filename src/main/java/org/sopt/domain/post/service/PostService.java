@@ -9,6 +9,7 @@ import org.sopt.domain.post.repository.PostRepository;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    @Transactional
     public PostDto createPost(final CreatePostRequest request) {
         validateDuplicatedTitle(request.title());
         validatePostDelay();
@@ -34,16 +36,19 @@ public class PostService {
         return PostDto.from(post);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getAllPosts() {
         return postRepository.findAll().stream().map(PostDto::from).toList();
     }
 
+    @Transactional(readOnly = true)
     public PostDto getPostById(final Long id) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
         return PostDto.from(post);
     }
 
+    @Transactional
     public PostDto updatePostTitle(final Long id, final UpdatePostRequest request) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
@@ -54,16 +59,16 @@ public class PostService {
         return PostDto.from(post);
     }
 
-
+    @Transactional
     public void deletePostById(final Long id) {
         postRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> searchPostsByKeyword(final String keyword) {
         var result = postRepository.findAllByTitleContaining(keyword);
         return result.stream().map(PostDto::from).toList();
     }
-
 
     private void validateDuplicatedTitle(final String title) {
         if (postRepository.existsPostByTitle(title)) {
