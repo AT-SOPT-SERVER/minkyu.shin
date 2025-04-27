@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -59,7 +60,7 @@ public class PostService {
     }
 
     public List<PostDto> searchPostsByKeyword(final String keyword) {
-        List<Post> result = postRepository.findAllByTitleContaining(keyword);
+        var result = postRepository.findAllByTitleContaining(keyword);
         return result.stream().map(PostDto::from).toList();
     }
 

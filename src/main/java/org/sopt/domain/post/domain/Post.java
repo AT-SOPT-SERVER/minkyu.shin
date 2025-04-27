@@ -18,7 +18,7 @@ public class Post extends BaseTimeEntity {
     private String title;
 
 
-    public Post() {}
+    protected Post() {}
 
     public Post(String title) {
         validateTitle(title);
@@ -51,7 +51,7 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 

@@ -6,6 +6,7 @@ import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
 import org.sopt.domain.post.util.PostRequestValidator;
+import org.sopt.global.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,43 +22,50 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(
+    public ResponseEntity<ApiResponse<PostDto>> createPost(
             @RequestBody final CreatePostRequest createPostRequest) {
         PostRequestValidator.validateInput(createPostRequest.title());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.createPost(createPostRequest));
+                .body(ApiResponse.created(postService.createPost(createPostRequest)));
     }
 
     @GetMapping
-    public ResponseEntity<GetPostListResponse> getPosts(
+    public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
             @RequestParam(required = false, name = "keyword") String keyword
     ) {
-        return ResponseEntity.ok(GetPostListResponse.of(
-                (keyword == null || keyword.trim().isEmpty()) ?
-                        postService.getAllPosts()
-                        : postService.searchPostsByKeyword(keyword)
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                    GetPostListResponse.of(
+                    (keyword == null || keyword.trim().isEmpty()) ?
+                            postService.getAllPosts()
+                            : postService.searchPostsByKeyword(keyword)
+                    )
                 )
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable final Long id) {
-        return ResponseEntity.ok(postService.getPostById(id));
+    public ResponseEntity<ApiResponse<PostDto>> getPostById(@PathVariable final Long id) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        postService.getPostById(id)
+                )
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePostTitle(
+    public ResponseEntity<ApiResponse<PostDto>> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
         PostRequestValidator.validateInput(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(postService.updatePostTitle(id, updatePostRequest));
+                .body(ApiResponse.ok(postService.updatePostTitle(id, updatePostRequest)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePostById(@PathVariable final Long id) {
+    public ResponseEntity<ApiResponse<Void>> deletePostById(@PathVariable final Long id) {
         postService.deletePostById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
 }
