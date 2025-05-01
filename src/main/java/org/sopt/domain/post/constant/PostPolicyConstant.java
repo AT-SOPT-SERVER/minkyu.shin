@@ -2,6 +2,7 @@ package org.sopt.domain.post.constant;
 
 public enum PostPolicyConstant {
     TITLE_MAX_LENGTH(30),
+    CONTENT_MAX_LENGTH(1000),
     POST_DELAY_SECONDS(180);
 
     private final int value;

@@ -24,7 +24,8 @@ public class PostController {
     @PostMapping
     public ResponseEntity<ApiResponse<PostDto>> createPost(
             @RequestBody final CreatePostRequest createPostRequest) {
-        PostRequestValidator.validateInput(createPostRequest.title());
+        PostRequestValidator.validateNull(createPostRequest.title());
+        PostRequestValidator.validateNull(createPostRequest.content());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created(postService.createPost(createPostRequest)));
     }
@@ -57,7 +58,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        PostRequestValidator.validateInput(updatePostRequest.title());
+        PostRequestValidator.validateNull(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.ok(postService.updatePostTitle(id, updatePostRequest)));
     }

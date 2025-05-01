@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 public record PostDto(
         Long postId,
         String title,
+        String content,
         OffsetDateTime createdAt
 ) {
 
@@ -14,6 +15,7 @@ public record PostDto(
         return new PostDto(
                 post.getId(),
                 post.getTitle(),
+                post.getContent(),
                 post.getCreatedAt()
         );
     }

@@ -12,11 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -54,7 +51,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
 
         validateDuplicatedTitle(request.title());
-        post.changeTitle(request.title());
+        post.updatePost(request.title());
 
         return PostDto.from(post);
     }
