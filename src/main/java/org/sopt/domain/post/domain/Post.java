@@ -8,19 +8,25 @@ import org.sopt.global.entity.BaseTimeEntity;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 
+@Table(
+        indexes = {
+                @Index(name = "post_title_idx", columnList = "title", unique = true),
+                @Index(name = "post_user_id_idx", columnList = "user_id")
+        }
+)
 @Entity
 public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     private Long id;
+
     private String title;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
 
     protected Post() {}
 
@@ -42,10 +48,10 @@ public class Post extends BaseTimeEntity {
 
     private void validate(String title, String content) {
         validateBlank(title);
-        validateLength(title);
+        validateTitleLength(title);
 
         validateBlank(content);
-        validateLength(content);
+        validateContentLength(content);
     }
 
     private void validateBlank(String text) {
@@ -54,11 +60,18 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-    private void validateLength(String text) {
+    private void validateTitleLength(String text) {
         if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.TITLE_MAX_LENGTH.getValue()) {
             throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
         }
     }
+
+    private void validateContentLength(String text) {
+        if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.CONTENT_MAX_LENGTH.getValue()) {
+            throw new BusinessException(ErrorCode.INVALID_CONTENT_LENGTH_EXCEPTION);
+        }
+    }
+
 
     public Long getId() {
         return this.id;
