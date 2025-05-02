@@ -1,6 +1,7 @@
 package org.sopt.domain.post.service;
 
 import org.sopt.domain.post.constant.PostPolicyConstant;
+import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.dto.PostDto;
@@ -8,6 +9,8 @@ import org.sopt.domain.post.dto.PostInfoDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.repository.PostRepository;
+import org.sopt.domain.user.domain.User;
+import org.sopt.domain.user.repository.UserRepository;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,26 +26,34 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public PostDto createPost(final CreatePostRequest request) {
+    public PostDto createPost(final Long userId, final CreatePostRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
         validateDuplicatedTitle(request.title());
         validatePostDelay();
-        var post = Post.createPost(request.title(), request.content());
-        postRepository.save(post);
-        return PostDto.from(post);
+
+        var post = Post.createPost(
+                request.title(),
+                request.content(),
+                request.tag(),
+                user
+        );
+
+        return PostDto.from(postRepository.save(post));
     }
 
     public List<PostInfoDto> getAllPosts(final PostSortType sortType) {
-        if (sortType == PostSortType.LATEST) {
-            return postRepository.findAllByOrderByCreatedAtDesc()
-                    .stream()
-                    .map(PostInfoDto::from)
-                    .toList();
+        if (sortType == PostSortType.TIME) {
+            List<Post> result = postRepository.findAllByOrderByCreatedAtDesc();
+            return result.stream().map(PostInfoDto::from).toList();
         }
 
         return postRepository.findAll().stream()
@@ -55,9 +67,16 @@ public class PostService {
         return PostDto.from(post);
     }
 
-    public List<PostInfoDto> searchPostsByKeyword(final String keyword, final PostSortType sortType) {
-        var result = postRepository.findPostsLike(keyword);
-        return result.stream().map(PostInfoDto::from).toList();
+    public List<PostInfoDto> searchPostsByKeyword(
+            final PostSearchType searchType, final String keyword) {
+        List<Post> posts = new ArrayList<>();
+        if (searchType == PostSearchType.TITLE) {
+            posts = postRepository.findByTitleContainingOrderByCreatedAtDesc(keyword);
+        } else if (searchType == PostSearchType.AUTHOR) {
+            posts = postRepository.findByUserNameContainingOrderByCreatedAtDesc(keyword);
+        }
+
+        return posts.stream().map(PostInfoDto::from).toList();
     }
 
     @Transactional

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
 
+    //business
     INPUT_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "입력값이 비어있습니다."),
     NOT_EXIST_POST_EXCEPTION(HttpStatus.NOT_FOUND,"해당 게시물은 존재하지 않습니다."),
     DUPLICATED_TITLE_EXCEPTION(HttpStatus.CONFLICT, "중복된 제목은 사용하실 수 없습니다."),
@@ -18,7 +19,8 @@ public enum ErrorCode {
 
     //common
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다"),
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다.");
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
+    NOT_FOUND_RESOURCE_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 데이터입니다.");
 
 
     private final HttpStatus httpStatus;

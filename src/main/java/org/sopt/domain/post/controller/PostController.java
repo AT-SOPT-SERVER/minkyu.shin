@@ -1,5 +1,6 @@
 package org.sopt.domain.post.controller;
 
+import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
@@ -24,27 +25,31 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostDto>> createPost(
+            @RequestHeader("X-USER-ID") final Long userId,
             @RequestBody final CreatePostRequest createPostRequest) {
         PostRequestValidator.validateNull(createPostRequest.title());
         PostRequestValidator.validateNull(createPostRequest.content());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.created(postService.createPost(createPostRequest)));
+                .body(ApiResponse.created(postService.createPost(userId, createPostRequest)));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
-            @RequestParam(required = false, name = "sortBy", defaultValue = "LATEST") PostSortType sortType,
+            @RequestParam(required = false, name = "sortBy") PostSortType sortType,
+            @RequestParam(required = false, name = "search-target") PostSearchType searchType,
             @RequestParam(required = false, name = "keyword") String keyword) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
                     GetPostListResponse.of(
                     (keyword == null || keyword.trim().isEmpty()) ?
                             postService.getAllPosts(sortType)
-                            : postService.searchPostsByKeyword(keyword, sortType)
+                            : postService.searchPostsByKeyword(searchType, keyword)
                     )
                 )
         );
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PostDto>> getPostById(@PathVariable final Long id) {

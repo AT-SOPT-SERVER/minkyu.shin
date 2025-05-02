@@ -20,10 +20,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByOrderByCreatedAtDesc();
 
-    @Query("select p from Post p where p.title " +
-            "like %:keyword% " +
-            "or p.user.name like %:keyword%")
-    List<Post> findPostsLike(@Param("keyword") String keyword);
+    List<Post> findByTitleContainingOrderByCreatedAtDesc(String keyword);
+
+    List<Post> findByUserNameContainingOrderByCreatedAtDesc(String keyword);
 
     Optional<Post> findTopByOrderByCreatedAtDesc();
+
 }

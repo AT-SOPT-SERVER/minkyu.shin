@@ -2,6 +2,7 @@ package org.sopt.domain.post.domain;
 
 import jakarta.persistence.*;
 import org.sopt.domain.post.constant.PostPolicyConstant;
+import org.sopt.domain.post.constant.PostTag;
 import org.sopt.domain.post.util.TextLengthUtil;
 import org.sopt.domain.user.domain.User;
 import org.sopt.global.entity.BaseTimeEntity;
@@ -23,6 +24,7 @@ public class Post extends BaseTimeEntity {
 
     private String title;
     private String content;
+    private PostTag tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,14 +32,16 @@ public class Post extends BaseTimeEntity {
 
     protected Post() {}
 
-    public Post(String title, String content) {
+    public Post(String title, String content, PostTag tag, User user) {
         validate(title, content);
         this.title = title;
         this.content = content;
+        this.tag = tag;
+        this.user = user;
     }
 
-    public static Post createPost(String title, String content) {
-        return new Post(title, content);
+    public static Post createPost(String title, String content, PostTag postTag, User user) {
+        return new Post(title, content, postTag, user);
     }
 
     public void updatePost(String newTitle, String newContent) {
@@ -82,6 +86,10 @@ public class Post extends BaseTimeEntity {
 
     public String getContent() {
         return this.content;
+    }
+
+    public PostTag getTag() {
+        return this.tag;
     }
 
     public User getUser() {

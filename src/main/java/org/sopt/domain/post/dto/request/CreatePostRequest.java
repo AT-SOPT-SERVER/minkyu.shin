@@ -1,9 +1,10 @@
 package org.sopt.domain.post.dto.request;
 
-import org.sopt.domain.post.util.PostRequestValidator;
+import org.sopt.domain.post.constant.PostTag;
 
 public record CreatePostRequest(
         String title,
-        String content
+        String content,
+        PostTag tag
 ) {
 }
