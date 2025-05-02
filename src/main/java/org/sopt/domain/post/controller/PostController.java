@@ -1,5 +1,6 @@
 package org.sopt.domain.post.controller;
 
+import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
@@ -32,14 +33,14 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
-            @RequestParam(required = false, name = "keyword") String keyword
-    ) {
+            @RequestParam(required = false, name = "sortBy", defaultValue = "LATEST") PostSortType sortType,
+            @RequestParam(required = false, name = "keyword") String keyword) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
                     GetPostListResponse.of(
                     (keyword == null || keyword.trim().isEmpty()) ?
-                            postService.getAllPosts()
-                            : postService.searchPostsByKeyword(keyword)
+                            postService.getAllPosts(sortType)
+                            : postService.searchPostsByKeyword(keyword, sortType)
                     )
                 )
         );
@@ -60,7 +61,7 @@ public class PostController {
             @RequestBody final UpdatePostRequest updatePostRequest) {
         PostRequestValidator.validateNull(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.ok(postService.updatePostTitle(id, updatePostRequest)));
+                .body(ApiResponse.ok(postService.updatePost(id, updatePostRequest)));
     }
 
     @DeleteMapping("/{id}")
