@@ -16,7 +16,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     boolean existsPostByTitle(String title);
 
-    List<Post> findAllByTitleContaining(String title);
+    @Query("select p from Post p where p.title " +
+            "like %:keyword% " +
+            "or p.user.name like %:keyword%")
+    List<Post> findPostsLike(String keyword);
 
     Optional<Post> findTopByOrderByCreatedAtDesc();
 }

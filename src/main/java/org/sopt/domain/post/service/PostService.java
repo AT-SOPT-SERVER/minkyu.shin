@@ -28,7 +28,7 @@ public class PostService {
     public PostDto createPost(final CreatePostRequest request) {
         validateDuplicatedTitle(request.title());
         validatePostDelay();
-        var post = Post.createPost(request.title());
+        var post = Post.createPost(request.title(), request.content());
         postRepository.save(post);
         return PostDto.from(post);
     }
@@ -51,7 +51,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
 
         validateDuplicatedTitle(request.title());
-        post.updatePost(request.title());
+        post.updatePost(request.title(), request.content());
 
         return PostDto.from(post);
     }
@@ -63,7 +63,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostDto> searchPostsByKeyword(final String keyword) {
-        var result = postRepository.findAllByTitleContaining(keyword);
+        var result = postRepository.findPostsLike(keyword);
         return result.stream().map(PostDto::from).toList();
     }
 
