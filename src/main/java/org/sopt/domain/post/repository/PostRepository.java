@@ -1,8 +1,10 @@
 package org.sopt.domain.post.repository;
 
+import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -16,10 +18,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     boolean existsPostByTitle(String title);
 
+    List<Post> findAllByOrderByCreatedAtDesc();
+
     @Query("select p from Post p where p.title " +
             "like %:keyword% " +
             "or p.user.name like %:keyword%")
-    List<Post> findPostsLike(String keyword);
+    List<Post> findPostsLike(@Param("keyword") String keyword);
 
     Optional<Post> findTopByOrderByCreatedAtDesc();
 }

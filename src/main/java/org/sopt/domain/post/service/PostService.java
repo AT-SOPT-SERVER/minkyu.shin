@@ -1,8 +1,10 @@
 package org.sopt.domain.post.service;
 
 import org.sopt.domain.post.constant.PostPolicyConstant;
+import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.dto.PostDto;
+import org.sopt.domain.post.dto.PostInfoDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.repository.PostRepository;
@@ -16,6 +18,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -33,20 +36,32 @@ public class PostService {
         return PostDto.from(post);
     }
 
-    @Transactional(readOnly = true)
-    public List<PostDto> getAllPosts() {
-        return postRepository.findAll().stream().map(PostDto::from).toList();
+    public List<PostInfoDto> getAllPosts(final PostSortType sortType) {
+        if (sortType == PostSortType.LATEST) {
+            return postRepository.findAllByOrderByCreatedAtDesc()
+                    .stream()
+                    .map(PostInfoDto::from)
+                    .toList();
+        }
+
+        return postRepository.findAll().stream()
+                .map(PostInfoDto::from)
+                .toList();
     }
 
-    @Transactional(readOnly = true)
     public PostDto getPostById(final Long id) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
         return PostDto.from(post);
     }
 
+    public List<PostInfoDto> searchPostsByKeyword(final String keyword, final PostSortType sortType) {
+        var result = postRepository.findPostsLike(keyword);
+        return result.stream().map(PostInfoDto::from).toList();
+    }
+
     @Transactional
-    public PostDto updatePostTitle(final Long id, final UpdatePostRequest request) {
+    public PostDto updatePost(final Long id, final UpdatePostRequest request) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
 
@@ -59,12 +74,6 @@ public class PostService {
     @Transactional
     public void deletePostById(final Long id) {
         postRepository.deleteById(id);
-    }
-
-    @Transactional(readOnly = true)
-    public List<PostDto> searchPostsByKeyword(final String keyword) {
-        var result = postRepository.findPostsLike(keyword);
-        return result.stream().map(PostDto::from).toList();
     }
 
     private void validateDuplicatedTitle(final String title) {

@@ -8,6 +8,7 @@ public record PostDto(
         Long postId,
         String title,
         String content,
+        String authorName,
         OffsetDateTime createdAt
 ) {
 
@@ -16,6 +17,7 @@ public record PostDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
+                post.getUser().getName(),
                 post.getCreatedAt()
         );
     }

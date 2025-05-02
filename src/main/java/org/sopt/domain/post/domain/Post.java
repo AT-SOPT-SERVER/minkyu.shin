@@ -72,7 +72,6 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-
     public Long getId() {
         return this.id;
     }
@@ -83,6 +82,10 @@ public class Post extends BaseTimeEntity {
 
     public String getContent() {
         return this.content;
+    }
+
+    public User getUser() {
+        return this.user;
     }
 
 }
