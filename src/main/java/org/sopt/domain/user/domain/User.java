@@ -15,7 +15,10 @@ public class User {
     private String name;
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
     private List<Post> posts = new ArrayList<>();
 
 
