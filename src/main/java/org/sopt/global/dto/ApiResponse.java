@@ -2,6 +2,8 @@ package org.sopt.global.dto;
 
 import org.sopt.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 
 public record ApiResponse<T>(
         int status,
@@ -19,7 +21,14 @@ public record ApiResponse<T>(
     }
 
     // 에러 응답
-    public static ApiResponse<Void> error(ErrorCode errorCode) {
+    public static ResponseEntity<ApiResponse<Void>> createErrorResponseEntity(ErrorCode errorCode) {
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ApiResponse.from(errorCode));
+    }
+
+    public static ApiResponse<Void> from(ErrorCode errorCode) {
         return new ApiResponse<>(errorCode.getHttpStatus().value(), errorCode.getMessage(), null);
     }
+
 }

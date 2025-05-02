@@ -14,7 +14,12 @@ public enum ErrorCode {
     INVALID_CONTENT_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST,
             "본문은 " + PostPolicyConstant.CONTENT_MAX_LENGTH.getValue() + "자 이하로 작성해야 합니다."),
     POST_DELAY_EXCEPTION(HttpStatus.FORBIDDEN, "게시물 작성은 "
-            + PostPolicyConstant.POST_DELAY_SECONDS.getValue() + "초마다 가능합니다.");
+            + PostPolicyConstant.POST_DELAY_SECONDS.getValue() + "초마다 가능합니다."),
+
+    //common
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다"),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;
