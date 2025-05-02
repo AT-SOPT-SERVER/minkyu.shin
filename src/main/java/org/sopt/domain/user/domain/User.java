@@ -22,9 +22,21 @@ public class User {
     protected User() {}
 
     public User(String name, String email) {
+        validate(name);
         this.name = name;
         this.email = email;
     }
+
+    private void validate(String name) {
+        validateName(name);
+    }
+
+    private void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or blank");
+        }
+    }
+
 
     public static User create(String name, String email) {
         return new User(name, email);
@@ -41,4 +53,6 @@ public class User {
     public String getEmail() {
         return this.email;
     }
+
+
 }

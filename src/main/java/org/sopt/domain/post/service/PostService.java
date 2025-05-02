@@ -4,6 +4,7 @@ import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
+import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.PostInfoDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
@@ -77,6 +78,12 @@ public class PostService {
         }
 
         return posts.stream().map(PostInfoDto::from).toList();
+    }
+
+    public List<PostInfoDto> getPostByTag(final PostTag tag) {
+        return postRepository.findByTagOrderByCreatedAtDesc(tag).stream()
+                .map(PostInfoDto::from)
+                .toList();
     }
 
     @Transactional

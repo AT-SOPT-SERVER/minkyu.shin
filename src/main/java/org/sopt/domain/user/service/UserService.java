@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -17,8 +17,7 @@ public class UserService {
 
     public UserDto createUser(CreateUserRequest createUserRequest) {
         var user = User.create(createUserRequest.name(), createUserRequest.email());
-        userRepository.save(user);
-        return UserDto.from(user);
+        return UserDto.from(userRepository.save(user));
     }
 
 }

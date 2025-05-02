@@ -1,7 +1,4 @@
-package org.sopt.domain.post.util;
-
-import java.text.BreakIterator;
-import java.util.Locale;
+package org.sopt.global.util;
 
 public class TextLengthUtil {
 

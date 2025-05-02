@@ -27,11 +27,11 @@ public class BusinessExceptionHandler {
 
     @ExceptionHandler({
             MethodArgumentTypeMismatchException.class,
-            IllegalArgumentException.class,
             HttpMessageNotReadableException.class,
             InvalidFormatException.class,
             ServletRequestBindingException.class
     })
+
     public ResponseEntity<ApiResponse<Void>> handleBadRequestException(Exception e) {
         System.out.println("Bad Request Exception: " + e.getMessage());
         return ApiResponse.createErrorResponseEntity(ErrorCode.INVALID_INPUT_VALUE);

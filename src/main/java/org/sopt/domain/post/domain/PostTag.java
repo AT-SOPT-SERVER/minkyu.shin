@@ -1,17 +1,17 @@
-package org.sopt.domain.post.constant;
+package org.sopt.domain.post.domain;
 
 public enum PostTag {
     BACKEND("백엔드"),
     DATABASE("데이터베이스"),
     INFRASTRUCTURE("인프라");
 
-    private final String tagName;
+    public final String tagName;
 
     PostTag(String tagName) {
         this.tagName = tagName;
     }
 
-    public String getTagName() {
+    String getTagName() {
         return tagName;
     }
 }

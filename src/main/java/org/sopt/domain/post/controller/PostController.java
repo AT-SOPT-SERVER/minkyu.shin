@@ -2,13 +2,14 @@ package org.sopt.domain.post.controller;
 
 import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
+import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
-import org.sopt.domain.post.util.PostRequestValidator;
 import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.util.InputValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,8 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> createPost(
             @RequestHeader("X-USER-ID") final Long userId,
             @RequestBody final CreatePostRequest createPostRequest) {
-        PostRequestValidator.validateNull(createPostRequest.title());
-        PostRequestValidator.validateNull(createPostRequest.content());
+        InputValidator.validateNullOrBlank(createPostRequest.title());
+        InputValidator.validateNullOrBlank(createPostRequest.content());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created(postService.createPost(userId, createPostRequest)));
     }
@@ -36,7 +37,7 @@ public class PostController {
     @GetMapping
     public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
             @RequestParam(required = false, name = "sortBy") PostSortType sortType,
-            @RequestParam(required = false, name = "search-target") PostSearchType searchType,
+            @RequestParam(required = false, name = "search-type") PostSearchType searchType,
             @RequestParam(required = false, name = "keyword") String keyword) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
@@ -45,6 +46,18 @@ public class PostController {
                             postService.getAllPosts(sortType)
                             : postService.searchPostsByKeyword(searchType, keyword)
                     )
+                )
+        );
+    }
+
+    @GetMapping("/tags/{tag}")
+    public ResponseEntity<ApiResponse<GetPostListResponse>> getPostByTag(
+            @PathVariable final PostTag tag) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        GetPostListResponse.of(
+                                postService.getPostByTag(tag)
+                        )
                 )
         );
     }
@@ -64,7 +77,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> updatePostTitle(
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        PostRequestValidator.validateNull(updatePostRequest.title());
+        InputValidator.validateNullOrBlank(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.ok(postService.updatePost(id, updatePostRequest)));
     }

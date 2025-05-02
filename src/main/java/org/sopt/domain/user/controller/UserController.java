@@ -3,6 +3,7 @@ package org.sopt.domain.user.controller;
 import org.sopt.domain.user.dto.UserDto;
 import org.sopt.domain.user.dto.request.CreateUserRequest;
 import org.sopt.domain.user.service.UserService;
+import org.sopt.global.util.InputValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(CreateUserRequest createUserRequest) {
+        InputValidator.validateNullOrBlank(createUserRequest.name());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.createUser(createUserRequest));
     }

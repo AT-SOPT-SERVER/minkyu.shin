@@ -2,6 +2,7 @@ package org.sopt.domain.post.repository;
 
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
+import org.sopt.domain.post.domain.PostTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findTopByOrderByCreatedAtDesc();
 
+    List<Post> findByTagOrderByCreatedAtDesc(PostTag tag);
 }
