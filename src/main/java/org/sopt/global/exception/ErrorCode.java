@@ -16,8 +16,10 @@ public enum ErrorCode {
             "본문은 " + PostPolicyConstant.CONTENT_MAX_LENGTH.getValue() + "자 이하로 작성해야 합니다."),
     POST_DELAY_EXCEPTION(HttpStatus.FORBIDDEN, "게시물 작성은 "
             + PostPolicyConstant.POST_DELAY_SECONDS.getValue() + "초마다 가능합니다."),
+    INVALID_POST_TAG_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 태그는 잘못된 태그입니다."),
 
     //common
+    FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN, "리소스에 대한 접근 권한이 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다"),
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
     NOT_FOUND_RESOURCE_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 데이터입니다.");

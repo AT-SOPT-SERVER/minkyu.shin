@@ -87,9 +87,13 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto updatePost(final Long id, final UpdatePostRequest request) {
+    public PostDto updatePost(final Long userId, final Long id, final UpdatePostRequest request) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+        }
 
         validateDuplicatedTitle(request.title());
         post.updatePost(request.title(), request.content());
@@ -98,7 +102,14 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePostById(final Long id) {
+    public void deletePostById(final Long userId, final Long id) {
+        var post = postRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
+        }
+
         postRepository.deleteById(id);
     }
 
@@ -108,6 +119,9 @@ public class PostService {
         }
     }
 
+    /*
+     * 수정 필요!
+     */
     private void validatePostDelay() {
         postRepository.findTopByOrderByCreatedAtDesc()
                 .ifPresent(lastPost -> {

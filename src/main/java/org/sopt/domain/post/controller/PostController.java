@@ -62,10 +62,9 @@ public class PostController {
         );
     }
 
-
-
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostDto>> getPostById(@PathVariable final Long id) {
+    public ResponseEntity<ApiResponse<PostDto>> getPostById(
+            @PathVariable final Long id) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
                         postService.getPostById(id)
@@ -74,17 +73,20 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostDto>> updatePostTitle(
+    public ResponseEntity<ApiResponse<PostDto>> updatePost(
+            @RequestHeader("X-USER-ID") final Long userId,
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
         InputValidator.validateNullOrBlank(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.ok(postService.updatePost(id, updatePostRequest)));
+                .body(ApiResponse.ok(postService.updatePost(userId, id, updatePostRequest)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deletePostById(@PathVariable final Long id) {
-        postService.deletePostById(id);
+    public ResponseEntity<ApiResponse<Void>> deletePost(
+            @RequestHeader("X-USER-ID") final Long userId,
+            @PathVariable final Long id) {
+        postService.deletePostById(userId, id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
