@@ -6,6 +6,7 @@ import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
+import org.sopt.domain.post.dto.response.GetPostDetailsResponse;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
 import org.sopt.global.dto.ApiResponse;
@@ -63,11 +64,13 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostDto>> getPostById(
+    public ResponseEntity<ApiResponse<GetPostDetailsResponse>> getPostById(
             @PathVariable final Long id) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
-                        postService.getPostById(id)
+                        GetPostDetailsResponse.of(
+                            postService.getPostById(id)
+                        )
                 )
         );
     }

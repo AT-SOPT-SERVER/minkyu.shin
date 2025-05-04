@@ -3,7 +3,7 @@ package org.sopt.domain.post.dto;
 import org.sopt.domain.post.domain.Post;
 
 public record PostInfoDto(
-        Long postId,
+        long postId,
         String title,
         String authorName
 ) {
