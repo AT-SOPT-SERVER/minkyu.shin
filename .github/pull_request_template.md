@@ -12,14 +12,20 @@
 ---
 
 ## 🔥 이런 고민들을 했습니다!
-- 문제 상황 & 해결 방법 간단 정리  
-  예: API 통신 에러 → JSON 파싱 오류 → ObjectMapper 설정 추가로 해결
+<details>
+<summary>💡고민?</summary>
+<div markdown="1">
+내용
+</div>
+</details>
+
+<br></br>
 
 ---
 
 ## 📷 Screenshot
-<!— 구현 화면이 있으면 첨부해주세요 —>
-<!— 예: ![image](url) —>
+<!-- 구현 화면이 있으면 첨부해주세요 -->
+<!-- 예: ![image](url) -->
 
 ---
 

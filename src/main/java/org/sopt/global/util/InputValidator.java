@@ -1,13 +1,12 @@
-package org.sopt.domain.post.util;
+package org.sopt.global.util;
 
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
-import org.springframework.stereotype.Component;
 
-public class PostRequestValidator {
-    private PostRequestValidator() {}
+public class InputValidator {
+    private InputValidator() {}
 
-    public static void validateInput(String input) {
+    public static void validateNullOrBlank(String input) {
         if (input == null || input.isBlank()) {
             throw new BusinessException(ErrorCode.INPUT_BLANK_EXCEPTION);
         }

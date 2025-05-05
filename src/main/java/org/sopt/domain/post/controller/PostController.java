@@ -1,11 +1,16 @@
 package org.sopt.domain.post.controller;
 
+import org.sopt.domain.post.constant.PostSearchType;
+import org.sopt.domain.post.constant.PostSortType;
+import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
+import org.sopt.domain.post.dto.response.GetPostDetailsResponse;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
-import org.sopt.domain.post.util.PostRequestValidator;
+import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.util.InputValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,43 +26,71 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<PostDto> createPost(
+    public ResponseEntity<ApiResponse<PostDto>> createPost(
+            @RequestHeader("X-USER-ID") final Long userId,
             @RequestBody final CreatePostRequest createPostRequest) {
-        PostRequestValidator.validateInput(createPostRequest.title());
+        InputValidator.validateNullOrBlank(createPostRequest.title());
+        InputValidator.validateNullOrBlank(createPostRequest.content());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(postService.createPost(createPostRequest));
+                .body(ApiResponse.created(postService.createPost(userId, createPostRequest)));
     }
 
     @GetMapping
-    public ResponseEntity<GetPostListResponse> getPosts(
-            @RequestParam(required = false, name = "keyword") String keyword
-    ) {
-        return ResponseEntity.ok(GetPostListResponse.of(
-                (keyword == null || keyword.trim().isEmpty()) ?
-                        postService.getAllPosts()
-                        : postService.searchPostsByKeyword(keyword)
+    public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
+            @RequestParam(required = false, name = "sortBy") PostSortType sortType,
+            @RequestParam(required = false, name = "search-type") PostSearchType searchType,
+            @RequestParam(required = false, name = "keyword") String keyword) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                    GetPostListResponse.of(
+                    (keyword == null || keyword.trim().isEmpty()) ?
+                            postService.getAllPosts(sortType)
+                            : postService.searchPostsByKeyword(searchType, keyword)
+                    )
+                )
+        );
+    }
+
+    @GetMapping("/tags/{tag}")
+    public ResponseEntity<ApiResponse<GetPostListResponse>> getPostByTag(
+            @PathVariable final PostTag tag) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        GetPostListResponse.of(
+                                postService.getPostByTag(tag)
+                        )
                 )
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable final Long id) {
-        return ResponseEntity.ok(postService.getPostById(id));
+    public ResponseEntity<ApiResponse<GetPostDetailsResponse>> getPostById(
+            @PathVariable final Long id) {
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        GetPostDetailsResponse.of(
+                            postService.getPostById(id)
+                        )
+                )
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePostTitle(
+    public ResponseEntity<ApiResponse<PostDto>> updatePost(
+            @RequestHeader("X-USER-ID") final Long userId,
             @PathVariable final Long id,
             @RequestBody final UpdatePostRequest updatePostRequest) {
-        PostRequestValidator.validateInput(updatePostRequest.title());
+        InputValidator.validateNullOrBlank(updatePostRequest.title());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(postService.updatePostTitle(id, updatePostRequest));
+                .body(ApiResponse.ok(postService.updatePost(userId, id, updatePostRequest)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePostById(@PathVariable final Long id) {
-        postService.deletePostById(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse<Void>> deletePost(
+            @RequestHeader("X-USER-ID") final Long userId,
+            @PathVariable final Long id) {
+        postService.deletePostById(userId, id);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
 }
