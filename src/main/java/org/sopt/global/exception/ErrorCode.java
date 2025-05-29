@@ -3,6 +3,7 @@ package org.sopt.global.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.sopt.domain.comment.constant.CommentPolicyConstant;
 import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.springframework.http.HttpStatus;
 
@@ -13,7 +14,7 @@ public enum ErrorCode {
     /**
      * post. code prefix: post-
      */
-    INPUT_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "post-1", "입력값이 비어있습니다."),
+    INPUT_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "post-1", "입력값은 null 또는 빈 값일 수 없습니다."),
     NOT_EXIST_POST_EXCEPTION(HttpStatus.NOT_FOUND, "post-2", "해당 게시물은 존재하지 않습니다."),
     DUPLICATED_TITLE_EXCEPTION(HttpStatus.CONFLICT, "post-3", "중복된 제목은 사용하실 수 없습니다."),
     INVALID_TITLE_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "post-4",
@@ -23,10 +24,8 @@ public enum ErrorCode {
     POST_DELAY_EXCEPTION(HttpStatus.FORBIDDEN, "post-5",
             "게시물 작성은 " + PostPolicyConstant.POST_DELAY_SECONDS.getValue() + "초마다 가능합니다."),
     INVALID_POST_TAG_EXCEPTION(HttpStatus.BAD_REQUEST, "post-6", "해당 태그는 잘못된 태그입니다."),
-
-    /**
-     * user. code prefix: user-
-     */
+    INVALID_COMMENT_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "post-7",
+            "댓글은 " + CommentPolicyConstant.COMMENT_MAX_LENGTH.getValue() + "자 이하로 작성해야 합니다."),
 
 
     /**
@@ -38,6 +37,7 @@ public enum ErrorCode {
     INVALID_ACCESS_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-4", "유효하지 않은 엑세스 토큰입니다."),
     INVALID_REFRESH_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-5", "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-6", "지원하지 않는 JWT 토큰입니다."),
+
 
     /**
      * resource. code prefix: resource-

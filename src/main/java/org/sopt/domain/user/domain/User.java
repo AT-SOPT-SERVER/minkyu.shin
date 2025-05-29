@@ -40,7 +40,7 @@ public class User {
 
     public static void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("낙네임은 null 값이거나 비어있을 수 없습니다");
+            throw new IllegalArgumentException("낙네임은 null 또는 빈 문자열일 수 없습니다.");
         }
         if (name.length() > 10) {
             throw new IllegalArgumentException("낙네임은 10자 이하이어야 합니다");

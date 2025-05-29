@@ -8,11 +8,11 @@ import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
-import org.sopt.domain.post.dto.response.GetPostDetailsResponse;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
 import org.sopt.global.dto.ApiResponse;
-import org.sopt.global.util.InputValidator;
+import org.sopt.global.dto.response.GetPostDetailsWithCommentsResponse;
+import org.sopt.query.PostQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+    private final PostQueryService postQueryService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostDto>> createPost(
@@ -61,14 +62,10 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<GetPostDetailsResponse>> getPostById(
+    public ResponseEntity<ApiResponse<GetPostDetailsWithCommentsResponse>> getPostById(
             @PathVariable final Long id) {
         return ResponseEntity.ok(
-                ApiResponse.ok(
-                        GetPostDetailsResponse.of(
-                            postService.getPostById(id)
-                        )
-                )
+                ApiResponse.ok(postQueryService.getPostWithComments(id))
         );
     }
 

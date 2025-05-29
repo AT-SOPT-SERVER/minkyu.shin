@@ -38,7 +38,7 @@ public class PostService {
         validateDuplicatedTitle(request.title());
         validatePostDelay();
 
-        var post = Post.createPost(
+        var post = Post.create(
                 request.title(),
                 request.content(),
                 request.tag(),

@@ -40,7 +40,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post createPost(String title, String content, PostTag tag, User user) {
+    public static Post create(String title, String content, PostTag tag, User user) {
         validate(title, content);
         return Post.builder()
                 .title(title)
