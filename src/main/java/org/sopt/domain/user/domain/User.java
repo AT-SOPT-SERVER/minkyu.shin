@@ -1,61 +1,58 @@
 package org.sopt.domain.user.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.sopt.domain.post.domain.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length =10)
     private String name;
+
+    @Column(nullable = false)
     private String email;
-
-    @OneToMany(
-            mappedBy = "user",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
-    )
-    private List<Post> posts = new ArrayList<>();
-
-
-    protected User() {}
-
-    public User(String name, String email) {
-        validate(name);
-        this.name = name;
-        this.email = email;
-    }
-
-    private void validate(String name) {
-        validateName(name);
-    }
-
-    private void validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be null or blank");
-        }
-    }
 
 
     public static User create(String name, String email) {
-        return new User(name, email);
+        validate(name, email);
+        return User.builder()
+                .name(name)
+                .email(email)
+                .build();
     }
 
-    public Long getId() {
-        return this.id;
+    public static void validate(String name, String email) {
+        validateName(name);
+        validateEmail(email);
     }
 
-    public String getName() {
-        return this.name;
+    public static void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("낙네임은 null 값이거나 비어있을 수 없습니다");
+        }
+        if (name.length() > 10) {
+            throw new IllegalArgumentException("낙네임은 10자 이하이어야 합니다");
+        }
     }
 
-    public String getEmail() {
-        return this.email;
+    private static void validateEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("이메일은 null 값이거나 비어있을 수 없습니다");
+        }
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다");
+        }
     }
-
-
 }

@@ -1,5 +1,7 @@
 package org.sopt.domain.post.controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.PostTag;
@@ -16,21 +18,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/posts")
 public class PostController {
+
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
-
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostDto>> createPost(
             @RequestHeader("X-USER-ID") final Long userId,
-            @RequestBody final CreatePostRequest createPostRequest) {
-        InputValidator.validateNullOrBlank(createPostRequest.title());
-        InputValidator.validateNullOrBlank(createPostRequest.content());
+            @Valid @RequestBody final CreatePostRequest createPostRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created(postService.createPost(userId, createPostRequest)));
     }
@@ -79,8 +76,7 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> updatePost(
             @RequestHeader("X-USER-ID") final Long userId,
             @PathVariable final Long id,
-            @RequestBody final UpdatePostRequest updatePostRequest) {
-        InputValidator.validateNullOrBlank(updatePostRequest.title());
+            @Valid @RequestBody final UpdatePostRequest updatePostRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.ok(postService.updatePost(userId, id, updatePostRequest)));
     }

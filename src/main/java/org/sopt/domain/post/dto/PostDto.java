@@ -5,7 +5,7 @@ import org.sopt.domain.post.domain.Post;
 import java.time.OffsetDateTime;
 
 public record PostDto(
-        Long postId,
+        long postId,
         String title,
         String content,
         String tag,

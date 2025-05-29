@@ -1,5 +1,6 @@
 package org.sopt.domain.post.service;
 
+import lombok.RequiredArgsConstructor;
 import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
@@ -23,16 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     public PostDto createPost(final Long userId, final CreatePostRequest request) {

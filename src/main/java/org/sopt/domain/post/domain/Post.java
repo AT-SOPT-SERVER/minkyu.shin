@@ -1,6 +1,7 @@
 package org.sopt.domain.post.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.global.util.TextLengthUtil;
 import org.sopt.domain.user.domain.User;
@@ -8,6 +9,11 @@ import org.sopt.global.entity.BaseTimeEntity;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
 
+@Entity
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
         indexes = {
                 @Index(name = "post_title_idx", columnList = "title", unique = true),
@@ -15,14 +21,16 @@ import org.sopt.global.exception.ErrorCode;
                 @Index(name = "post_tag_idx", columnList = "tag")
         }
 )
-@Entity
 public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 30)
     private String title;
+
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -32,18 +40,14 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    protected Post() {}
-
-    public Post(String title, String content, PostTag tag, User user) {
-        validate(title, content);
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.user = user;
-    }
-
     public static Post createPost(String title, String content, PostTag tag, User user) {
-        return new Post(title, content, tag, user);
+        validate(title, content);
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .tag(tag)
+                .user(user)
+                .build();
     }
 
     public void updatePost(String newTitle, String newContent) {
@@ -52,7 +56,7 @@ public class Post extends BaseTimeEntity {
         this.content = newContent;
     }
 
-    private void validate(String title, String content) {
+    public static void validate(String title, String content) {
         validateBlank(title);
         validateTitleLength(title);
 
@@ -60,42 +64,22 @@ public class Post extends BaseTimeEntity {
         validateContentLength(content);
     }
 
-    private void validateBlank(String text) {
+    public static void validateBlank(String text) {
         if (text == null || text.isBlank()) {
             throw new BusinessException(ErrorCode.INPUT_BLANK_EXCEPTION);
         }
     }
 
-    private void validateTitleLength(String text) {
+    public static void validateTitleLength(String text) {
         if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.TITLE_MAX_LENGTH.getValue()) {
             throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
         }
     }
 
-    private void validateContentLength(String text) {
+    public static void validateContentLength(String text) {
         if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.CONTENT_MAX_LENGTH.getValue()) {
             throw new BusinessException(ErrorCode.INVALID_CONTENT_LENGTH_EXCEPTION);
         }
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getContent() {
-        return this.content;
-    }
-
-    public PostTag getTag() {
-        return this.tag;
-    }
-
-    public User getUser() {
-        return this.user;
     }
 
 }

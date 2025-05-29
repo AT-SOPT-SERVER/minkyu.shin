@@ -31,4 +31,9 @@ public record ApiResponse<T>(
         return new ApiResponse<>(errorCode.getHttpStatus().value(), errorCode.getMessage(), null);
     }
 
+    public static ApiResponse<Void> of(ErrorCode errorCode, String message) {
+        return new ApiResponse<>(errorCode.getHttpStatus().value(),
+                errorCode.getMessage() + "- detail message: " + message, null);
+    }
+
 }

@@ -1,5 +1,7 @@
 package org.sopt.domain.user.controller;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.sopt.domain.user.dto.UserDto;
 import org.sopt.domain.user.dto.request.CreateUserRequest;
 import org.sopt.domain.user.service.UserService;
@@ -11,18 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
-    public ResponseEntity<UserDto> createUser(CreateUserRequest createUserRequest) {
-        InputValidator.validateNullOrBlank(createUserRequest.name());
+    public ResponseEntity<UserDto> createUser(
+            @Valid CreateUserRequest createUserRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.createUser(createUserRequest));
     }

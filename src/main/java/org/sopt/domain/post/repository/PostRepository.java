@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     boolean existsPostByTitle(String title);
