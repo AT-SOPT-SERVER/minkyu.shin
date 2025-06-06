@@ -5,6 +5,8 @@ import org.sopt.domain.like.domain.LikeTargetType;
 import org.sopt.global.cache.RedisCacheRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.sopt.domain.like.cache.LikeCacheConstants.*;
 
 @Repository
@@ -21,7 +23,7 @@ public class LikeCacheRepository {
     }
 
     public void setPostLikeCount(Long postId, int count) {
-        redisCacheRepository.set(postLikeKey(postId), count);
+        redisCacheRepository.set(postLikeKey(postId), count, 15, TimeUnit.MINUTES);
     }
 
     public void deletePostLikeCount(Long postId) {
@@ -36,7 +38,7 @@ public class LikeCacheRepository {
     }
 
     public void setCommentLikeCount(Long commentId, int count) {
-        redisCacheRepository.set(commentLikeKey(commentId), count);
+        redisCacheRepository.set(commentLikeKey(commentId), count, 15, TimeUnit.MINUTES);
     }
 
     public void deleteCommentLikeCount(Long commentId) {
@@ -51,9 +53,8 @@ public class LikeCacheRepository {
         redisCacheRepository.set(key, liked);
     }
 
-    public boolean getUserLikedStatus(Long userId, Long targetId, LikeTargetType targetType) {
+    public Boolean getUserLikedStatus(Long userId, Long targetId, LikeTargetType targetType) {
         String key = userLikeKey(userId, targetId, targetType);
-        Boolean value = redisCacheRepository.get(key, Boolean.class);
-        return Boolean.TRUE.equals(value); // 캐시에 없으면 false 반환
+        return redisCacheRepository.get(key, Boolean.class);
     }
 }

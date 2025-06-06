@@ -1,6 +1,5 @@
 package org.sopt.domain.like.service;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.domain.like.cache.LikeCacheRepository;
 import org.sopt.domain.like.domain.LikeTargetType;
@@ -19,7 +18,7 @@ public class LikeService {
     private final LikeCacheRepository likeCacheRepository;
 
     @Transactional
-    public void toggleLike(final Long userId, final LikeToggleRequest request) {
+    public boolean toggleLike(final Long userId, final LikeToggleRequest request) {
         Long targetId = request.targetId();
         LikeTargetType targetType = request.likeTargetType();
 
@@ -32,6 +31,68 @@ public class LikeService {
             likeCacheRepository.setUserLikedStatus(userId, targetId, targetType, true);
             incrementLikeCount(targetId, targetType);
         }
+
+        return !liked;
+    }
+
+    public boolean getUserLikedStatus(final Long userId, final Long targetId, final LikeTargetType targetType) {
+        Boolean cachedLikedStatus = likeCacheRepository.getUserLikedStatus(userId, targetId, targetType);
+        if (cachedLikedStatus != null) return cachedLikedStatus;
+
+        // 캐시 미스 → DB 조회 후 캐시에 저장
+        boolean liked = likeRepository.existsByUserIdAndLikeTargetTypeAndTargetId(userId, targetType, targetId);
+        likeCacheRepository.setUserLikedStatus(userId, targetId, targetType, liked);
+
+        return liked;
+    }
+
+    public int getLikeCount(final Long targetId, final LikeTargetType targetType) {
+        Integer count = targetType.getCacheCount(likeCacheRepository, targetId);
+        // 캐시 미스 → DB 조회 후 캐시에 저장
+        if (count == null) {
+            count = likeRepository.countByTargetIdAndLikeTargetType(targetId, targetType);
+            targetType.setCacheCount(likeCacheRepository, targetId, count);
+        }
+        return count;
+    }
+
+    // 타겟(게시물 or 댓글)들에 대한 좋아요 수 조회
+    public Map<Long, Integer> getLikeCounts(final List<Long> targetIds, final LikeTargetType targetType) {
+        Map<Long, Integer> result = new HashMap<>();
+        for (Long id : targetIds) {
+            result.put(id, getLikeCount(id, targetType));
+        }
+        return result;
+    }
+
+    // 현재 사용자가 좋아요한 타겟(게시물 or 댓글) 목록을 조회
+    public Set<Long> getUserLikedTargetIdSet(Long userId, LikeTargetType type, List<Long> targetIds) {
+        Set<Long> likedTargetIds = new HashSet<>();
+        List<Long> missedTargetIds = new ArrayList<>();
+
+        for (Long targetId : targetIds) {
+            Boolean cached = likeCacheRepository.getUserLikedStatus(userId, targetId, type);
+            if (cached != null) {
+                if (cached) {
+                    likedTargetIds.add(targetId);
+                }
+            } else {
+                missedTargetIds.add(targetId);
+            }
+        }
+
+        // 캐시 미스 → DB 조회 후 캐시에 저장
+        if (!missedTargetIds.isEmpty()) {
+            List<Long> dbLikedIds = likeRepository.findLikedTargetIdsByUserId(userId, type, missedTargetIds);
+            likedTargetIds.addAll(dbLikedIds);
+
+            for (Long id : missedTargetIds) {
+                boolean liked = dbLikedIds.contains(id);
+                likeCacheRepository.setUserLikedStatus(userId, id, type, liked);
+            }
+        }
+
+        return likedTargetIds;
     }
 
     private void incrementLikeCount(final Long targetId, final LikeTargetType likeTargetType) {
@@ -49,39 +110,5 @@ public class LikeService {
         } else {
             likeTargetType.setCacheCount(likeCacheRepository, targetId, count - 1);
         }
-    }
-
-    public boolean getUserLikedStatus(final Long userId, final Long targetId, final LikeTargetType targetType) {
-        boolean cached = likeCacheRepository.getUserLikedStatus(userId, targetId, targetType);
-
-        if (cached) return true;
-
-        // 캐시 미스 → DB 조회 후 캐시에 저장
-        boolean liked = likeRepository.existsByUserIdAndLikeTargetTypeAndTargetId(userId, targetType, targetId);
-        likeCacheRepository.setUserLikedStatus(userId, targetId, targetType, liked);
-
-        return liked;
-    }
-
-    public int getLikeCount(final Long targetId, final LikeTargetType targetType) {
-        Integer count = targetType.getCacheCount(likeCacheRepository, targetId);
-        if (count == null) {
-            count = likeRepository.countByTargetIdAndLikeTargetType(targetId, targetType);
-            targetType.setCacheCount(likeCacheRepository, targetId, count);
-        }
-        return count;
-    }
-
-    public Map<Long, Integer> getLikeCounts(final List<Long> targetIds, final LikeTargetType targetType) {
-        Map<Long, Integer> result = new HashMap<>();
-        for (Long id : targetIds) {
-            result.put(id, getLikeCount(id, targetType));
-        }
-        return result;
-    }
-
-    // 사용자가 좋아요한 타겟 ID 목록을 조회
-    public Set<Long> getUserLikedTargetIds(Long userId, LikeTargetType type, List<Long> targetIds) {
-        return new HashSet<>(likeRepository.findLikedTargetIdsByUserId(userId, type, targetIds));
     }
 }

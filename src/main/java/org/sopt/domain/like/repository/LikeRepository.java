@@ -23,4 +23,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
             @Param("targetType") LikeTargetType targetType,
             @Param("targetIds") List<Long> targetIds
     );
+
+    void deleteByUserIdAndTargetIdAndLikeTargetType(Long userId, Long targetId, LikeTargetType type);
 }

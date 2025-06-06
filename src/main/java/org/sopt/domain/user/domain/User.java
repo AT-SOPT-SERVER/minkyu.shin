@@ -2,17 +2,15 @@ package org.sopt.domain.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.sopt.domain.post.domain.Post;
+import org.sopt.global.entity.BaseTimeEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

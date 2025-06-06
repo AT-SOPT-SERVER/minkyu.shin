@@ -21,10 +21,11 @@ public class CommentController {
 
     @PostMapping()
     ResponseEntity<ApiResponse<CommentDto>> createComment(
-            @CurrentUserId Long userId,
+//            @CurrentUserId Long userId,
             @Valid @RequestBody CreateCommentRequest createCommentRequest) {
+        Long dummyUserId = 1L;
         return ResponseEntity.ok(
-                ApiResponse.ok(commentService.createComment(userId, createCommentRequest))
+                ApiResponse.ok(commentService.createComment(dummyUserId, createCommentRequest))
         );
     }
 
