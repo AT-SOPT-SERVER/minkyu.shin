@@ -36,8 +36,11 @@ public class Post extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PostTag tag;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public static Post create(String title, String content, PostTag tag, User user) {

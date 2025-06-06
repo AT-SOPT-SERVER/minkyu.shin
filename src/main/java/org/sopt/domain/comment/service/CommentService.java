@@ -37,7 +37,7 @@ public class CommentService {
         return CommentDto.from(commentRepository.save(comment));
     }
 
-    public CommentListDto getAllComments(Long postId) {
+    public CommentListDto getAllComments(final Long postId) {
         return CommentListDto.from(
                 commentRepository.findAllByPostId(postId).stream()
                         .map(CommentDto::from)
@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long userId, Long commentId) {
+    public void deleteComment(final Long userId, final Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
 
@@ -66,12 +66,10 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private static void checkAccessPermission(Long userId, Comment comment) {
+    private static void checkAccessPermission(final Long userId, final Comment comment) {
         if (!comment.getUser().getId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN_EXCEPTION);
         }
     }
-
-
 
 }

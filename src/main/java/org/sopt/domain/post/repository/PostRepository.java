@@ -4,6 +4,7 @@ import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.Post;
 import org.sopt.domain.post.domain.PostTag;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findTopByOrderByCreatedAtDesc();
 
     List<Post> findByTagOrderByCreatedAtDesc(PostTag tag);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.likeCount = :count WHERE p.id = :postId")
+    void updateLikeCount(@Param("postId") Long postId, @Param("count") int count);
 }
