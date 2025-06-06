@@ -51,7 +51,7 @@ public class LikeCountFlushScheduler {
         }
     }
 
-    private Long extractId(String key, String prefix) {
+    private Long extractId(final String key, final String prefix) {
         try {
             return Long.parseLong(key.replace(prefix, ""));
         } catch (NumberFormatException e) {

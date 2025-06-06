@@ -1,10 +1,9 @@
 package org.sopt.domain.like.cache;
 
 import lombok.RequiredArgsConstructor;
+import org.sopt.domain.like.domain.LikeTargetType;
 import org.sopt.global.cache.RedisCacheRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.sopt.domain.like.cache.LikeCacheConstants.*;
 
@@ -42,5 +41,19 @@ public class LikeCacheRepository {
 
     public void deleteCommentLikeCount(Long commentId) {
         redisCacheRepository.delete(commentLikeKey(commentId));
+    }
+
+    /**
+     * 좋아요 상태
+     */
+    public void setUserLikedStatus(Long userId, Long targetId, LikeTargetType targetType, boolean liked) {
+        String key = userLikeKey(userId, targetId, targetType);
+        redisCacheRepository.set(key, liked);
+    }
+
+    public boolean getUserLikedStatus(Long userId, Long targetId, LikeTargetType targetType) {
+        String key = userLikeKey(userId, targetId, targetType);
+        Boolean value = redisCacheRepository.get(key, Boolean.class);
+        return Boolean.TRUE.equals(value); // 캐시에 없으면 false 반환
     }
 }

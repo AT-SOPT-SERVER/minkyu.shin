@@ -3,7 +3,7 @@ package org.sopt.domain.like.strategy;
 import org.sopt.domain.like.cache.LikeCacheRepository;
 
 public interface LikeCacheStrategy {
-    Integer getCacheCount(LikeCacheRepository repository, Long targetId);
-    void setCacheCount(LikeCacheRepository repository, Long targetId, int count);
-    void deleteCache(LikeCacheRepository repository, Long targetId);
+    Integer getCacheCount(final LikeCacheRepository repository, final Long targetId);
+    void setCacheCount(final LikeCacheRepository repository, final Long targetId, final int count);
+    void deleteCache(final LikeCacheRepository repository, final Long targetId);
 }
