@@ -16,15 +16,15 @@ public enum LikeTargetType {
 
     private final LikeCacheStrategy strategy;
 
-    public Integer getCacheCount(LikeCacheRepository repo, Long targetId) {
-        return strategy.getCacheCount(repo, targetId);
+    public Integer getCacheCount(LikeCacheRepository repository, Long targetId) {
+        return strategy.getCacheCount(repository, targetId);
     }
 
-    public void setCacheCount(LikeCacheRepository repo, Long targetId, int count) {
-        strategy.setCacheCount(repo, targetId, count);
+    public void setCacheCount(LikeCacheRepository repository, Long targetId, int count) {
+        strategy.setCacheCount(repository, targetId, count);
     }
 
-    public void deleteCache(LikeCacheRepository repo, Long targetId) {
-        strategy.deleteCache(repo, targetId);
+    public void deleteCache(LikeCacheRepository repository, Long targetId) {
+        strategy.deleteCache(repository, targetId);
     }
 }

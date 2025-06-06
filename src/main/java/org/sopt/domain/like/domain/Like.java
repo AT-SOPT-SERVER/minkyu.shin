@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
+@Table(name = "likes")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {

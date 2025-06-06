@@ -12,7 +12,9 @@ public record CommentDto(
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,
         Long userId,
-        String name
+        String name,
+        int likeCount,
+        boolean likedByCurrentUser
 ) {
     public static CommentDto from(Comment comment) {
         return CommentDto.builder()
@@ -22,6 +24,19 @@ public record CommentDto(
                 .updatedAt(comment.getUpdatedAt())
                 .userId(comment.getUser().getId())
                 .name(comment.getUser().getName())
+                .build();
+    }
+
+    public CommentDto withLikeInfo(int likeCount, boolean likedByCurrentUser) {
+        return CommentDto.builder()
+                .commentId(this.commentId)
+                .content(this.content)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .userId(this.userId)
+                .name(this.name)
+                .likeCount(likeCount)
+                .likedByCurrentUser(likedByCurrentUser)
                 .build();
     }
 }

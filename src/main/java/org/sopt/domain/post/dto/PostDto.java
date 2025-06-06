@@ -8,13 +8,15 @@ import java.time.OffsetDateTime;
 
 @Builder
 public record PostDto(
-        long postId,
+        Long postId,
         String title,
         String content,
         PostTag tag,
         String authorName,
         OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
+        OffsetDateTime updatedAt,
+        int likeCount,
+        boolean likedByCurrentUser
 ) {
 
     public static PostDto from(Post post) {
@@ -28,4 +30,19 @@ public record PostDto(
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }
+
+    public PostDto withLikeInfo(int likeCount, boolean likedByCurrentUser) {
+        return PostDto.builder()
+                .postId(this.postId)
+                .title(this.title)
+                .content(this.content)
+                .tag(this.tag)
+                .authorName(this.authorName)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .likeCount(likeCount)
+                .likedByCurrentUser(likedByCurrentUser)
+                .build();
+    }
+
 }

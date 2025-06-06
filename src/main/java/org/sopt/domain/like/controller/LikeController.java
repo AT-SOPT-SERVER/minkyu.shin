@@ -2,7 +2,6 @@ package org.sopt.domain.like.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sopt.domain.like.domain.Like;
 import org.sopt.domain.like.dto.request.LikeToggleRequest;
 import org.sopt.domain.like.service.LikeService;
 import org.sopt.global.annotation.CurrentUserId;

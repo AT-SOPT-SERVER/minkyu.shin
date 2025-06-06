@@ -10,6 +10,7 @@ import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
+import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.dto.ApiResponse;
 import org.sopt.global.dto.response.GetPostDetailsWithCommentsResponse;
 import org.sopt.query.PostQueryService;
@@ -63,9 +64,10 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<GetPostDetailsWithCommentsResponse>> getPostById(
+            @CurrentUserId Long userId,
             @PathVariable final Long id) {
         return ResponseEntity.ok(
-                ApiResponse.ok(postQueryService.getPostWithComments(id))
+                ApiResponse.ok(postQueryService.getPostWithComments(userId, id))
         );
     }
 
