@@ -13,14 +13,18 @@ import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.repository.PostRepository;
 import org.sopt.domain.user.domain.User;
 import org.sopt.domain.user.repository.UserRepository;
+import org.sopt.global.dto.PagedResponse;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,15 +52,21 @@ public class PostService {
         return PostDto.from(postRepository.save(post));
     }
 
-    public List<PostInfoDto> getAllPosts(final PostSortType sortType) {
-        if (sortType == PostSortType.TIME) {
-            List<Post> result = postRepository.findAllByOrderByCreatedAtDesc();
-            return result.stream().map(PostInfoDto::from).toList();
-        }
-
-        return postRepository.findAll().stream()
+    public PagedResponse<PostInfoDto> getAllPosts(final PostSortType sortType, final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size, sortType.getSort());
+        Page<Post> pagedPosts = postRepository.findAll(pageable);
+        List<PostInfoDto> postInfoList = pagedPosts.getContent().stream()
                 .map(PostInfoDto::from)
                 .toList();
+
+        return new PagedResponse<>(
+                postInfoList,
+                pagedPosts.getNumber(),
+                pagedPosts.getSize(),
+                pagedPosts.getTotalElements(),
+                pagedPosts.getTotalPages(),
+                pagedPosts.isLast()
+        );
     }
 
     public PostDto getPostById(final Long id) {
@@ -65,16 +75,23 @@ public class PostService {
         return PostDto.from(post);
     }
 
-    public List<PostInfoDto> searchPostsByKeyword(
-            final PostSearchType searchType, final String keyword) {
-        List<Post> posts = new ArrayList<>();
-        if (searchType == PostSearchType.TITLE) {
-            posts = postRepository.findByTitleContainingOrderByCreatedAtDesc(keyword);
-        } else if (searchType == PostSearchType.AUTHOR) {
-            posts = postRepository.findByUserNameContainingOrderByCreatedAtDesc(keyword);
-        }
+    public PagedResponse<PostInfoDto> searchPostsByKeyword(
+            final PostSortType sortType,
+            final PostSearchType searchType, final String keyword, final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size, sortType.getSort());
+        Page<Post> pagedPosts = getPagedPosts(keyword, searchType, pageable);
+        List<PostInfoDto> postInfoList = pagedPosts.getContent().stream()
+                .map(PostInfoDto::from)
+                .toList();
 
-        return posts.stream().map(PostInfoDto::from).toList();
+        return new PagedResponse<>(
+                postInfoList,
+                pagedPosts.getNumber(),
+                pagedPosts.getSize(),
+                pagedPosts.getTotalElements(),
+                pagedPosts.getTotalPages(),
+                pagedPosts.isLast()
+        );
     }
 
     public List<PostInfoDto> getPostByTag(final PostTag tag) {
@@ -116,6 +133,7 @@ public class PostService {
         }
     }
 
+
     /*
      * 수정 필요!
      */
@@ -129,4 +147,10 @@ public class PostService {
                 });
     }
 
+    private Page<Post> getPagedPosts(final String keyword, final PostSearchType searchType, final Pageable pageable) {
+        return switch (searchType) {
+            case TITLE -> postRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+            case AUTHOR -> postRepository.findByUserNameContainingIgnoreCase(keyword, pageable);
+        };
+    }
 }

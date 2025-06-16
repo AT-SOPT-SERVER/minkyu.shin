@@ -6,12 +6,14 @@ import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
 import org.sopt.domain.post.domain.PostTag;
 import org.sopt.domain.post.dto.PostDto;
+import org.sopt.domain.post.dto.PostInfoDto;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
 import org.sopt.global.dto.ApiResponse;
 import org.sopt.domain.post.dto.response.GetPostDetailsWithCommentsResponse;
+import org.sopt.global.dto.PagedResponse;
 import org.sopt.query.PostQueryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,17 +36,17 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<GetPostListResponse>> getPosts(
-            @RequestParam(required = false, name = "sortBy") PostSortType sortType,
+    public ResponseEntity<ApiResponse<PagedResponse<PostInfoDto>>> getPosts (
+            @RequestParam(required = false, defaultValue = "LATEST", name = "sortBy") PostSortType sortType,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, name = "search-type") PostSearchType searchType,
             @RequestParam(required = false, name = "keyword") String keyword) {
         return ResponseEntity.ok(
                 ApiResponse.ok(
-                    GetPostListResponse.of(
-                    (keyword == null || keyword.trim().isEmpty()) ?
-                            postService.getAllPosts(sortType)
-                            : postService.searchPostsByKeyword(searchType, keyword)
-                    )
+                        (keyword == null || keyword.trim().isEmpty()) ?
+                                postService.getAllPosts(sortType, page, size)
+                                : postService.searchPostsByKeyword(sortType, searchType, keyword, page, size)
                 )
         );
     }

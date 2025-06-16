@@ -26,6 +26,8 @@ public enum ErrorCode {
     INVALID_POST_TAG_EXCEPTION(HttpStatus.BAD_REQUEST, "post-6", "해당 태그는 잘못된 태그입니다."),
     INVALID_COMMENT_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "post-7",
             "댓글은 " + CommentPolicyConstant.COMMENT_MAX_LENGTH.getValue() + "자 이하로 작성해야 합니다."),
+    NOT_SUPPORTED_SORT_TYPE(HttpStatus.BAD_REQUEST, "post-8" , "지원하지 않는 페이징 정렬 기준입니다." ),
+    NOT_SUPPORTED_SEARCH_TYPE(HttpStatus.BAD_REQUEST, "post-9" , "지원하지 않는 검색 기준입니다." ),
 
 
     /**

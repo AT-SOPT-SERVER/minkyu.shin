@@ -44,7 +44,7 @@ public class PostQueryService {
 
         return GetPostDetailsWithCommentsResponse.of(
                 postDto.withLikeInfo(postLikeCount, userLikedPost),
-                CommentListDto.from(commentDtoListWithLike)
+                commentDtoListWithLike
         );
     }
 }
