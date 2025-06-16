@@ -19,7 +19,6 @@ import org.sopt.global.exception.ErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +44,7 @@ public class PostService {
         var post = Post.create(
                 request.title(),
                 request.content(),
-                request.tag(),
+                request.tags(),
                 user
         );
 
@@ -95,7 +94,7 @@ public class PostService {
     }
 
     public List<PostInfoDto> getPostByTag(final PostTag tag) {
-        return postRepository.findByTagOrderByCreatedAtDesc(tag).stream()
+        return postRepository.findByTagsContainingOrderByCreatedAtDesc(tag).stream()
                 .map(PostInfoDto::from)
                 .toList();
     }
@@ -110,7 +109,7 @@ public class PostService {
         }
 
         validateDuplicatedTitle(request.title());
-        post.updatePost(request.title(), request.content());
+        post.updatePost(request.title(), request.content(), request.postTags());
 
         return PostDto.from(post);
     }

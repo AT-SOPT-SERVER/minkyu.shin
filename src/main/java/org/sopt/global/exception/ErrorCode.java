@@ -28,6 +28,7 @@ public enum ErrorCode {
             "댓글은 " + CommentPolicyConstant.COMMENT_MAX_LENGTH.getValue() + "자 이하로 작성해야 합니다."),
     NOT_SUPPORTED_SORT_TYPE(HttpStatus.BAD_REQUEST, "post-8" , "지원하지 않는 페이징 정렬 기준입니다." ),
     NOT_SUPPORTED_SEARCH_TYPE(HttpStatus.BAD_REQUEST, "post-9" , "지원하지 않는 검색 기준입니다." ),
+    TAG_COUNT_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "post-10" , "최대 2개까지의 태그까지만 지정 가능합니다." ),
 
 
     /**

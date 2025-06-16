@@ -16,13 +16,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     boolean existsPostByTitle(String title);
 
-
     Page<Post> findByTitleContainingIgnoreCase(String title, Pageable pageable);
     Page<Post> findByUserNameContainingIgnoreCase(String keyword, Pageable pageable);
 
     Optional<Post> findTopByOrderByCreatedAtDesc();
 
-    List<Post> findByTagOrderByCreatedAtDesc(PostTag tag);
+    List<Post> findByTagsContainingOrderByCreatedAtDesc(PostTag tag);
 
     @Modifying
     @Query("UPDATE Post p SET p.likeCount = :count WHERE p.id = :postId")
