@@ -56,7 +56,22 @@ public enum ErrorCode {
     NOT_FOUND_RESOURCE_EXCEPTION(HttpStatus.NOT_FOUND, "common-3", "존재하지 않는 데이터입니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "common-4", "지원하지 않는 HTTP 메소드입니다."),
     INVALID_CACHE_KEY_FORMAT(HttpStatus.BAD_REQUEST, "common-5", "캐시 키 형식이 잘못되었습니다."),
-    REDIS_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "redis-1", "Redis 처리 중 오류가 발생했습니다.");
+    REDIS_OPERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "redis-1", "Redis 처리 중 오류가 발생했습니다."),
+
+    /**
+     * user. code prefix: user-
+     */
+    NAME_NULL_OR_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "user-1", "닉네임은 null 또는 빈 문자열일 수 없습니다."),
+    EMAIL_NULL_OR_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "user-2", "이메일은 null 또는 빈 문자열일 수 없습니다."),
+    INVALID_EMAIL_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "user-3", "이메일 형식이 올바르지 않습니다."),
+    INVALID_NAME_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "user-4", "이름은 10자 이하로 작성해야 합니다."),
+
+    /**
+     * password. code prefix: password-
+     */
+    PASSWORD_NULL_OR_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "password-1",
+            "비밀번호는 null 또는 빈 문자열일 수 없습니다."),
+    INVALID_PASSWORD_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "password-2", "비밀번호 형식이 올바르지 않습니다.");
 
 
     private final HttpStatus httpStatus;

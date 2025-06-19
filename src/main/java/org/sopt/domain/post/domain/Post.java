@@ -12,6 +12,8 @@ import org.sopt.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.sopt.global.util.InputValidator.*;
+
 @Entity
 @Getter
 @Builder
@@ -73,31 +75,21 @@ public class Post extends BaseTimeEntity {
     }
 
     public static void validate(String title, String content, Set<PostTag> tags) {
-        validateBlank(title);
-        validateTitleLength(title);
-
-        validateBlank(content);
-        validateContentLength(content);
-
+        validateTitle(title);
+        validateContent(content);
         validateTags(tags);
     }
 
-    public static void validateBlank(String text) {
-        if (text == null || text.isBlank()) {
-            throw new BusinessException(ErrorCode.INPUT_BLANK_EXCEPTION);
-        }
+    private static void validateTitle(String title) {
+        validateNullOrBlank(title, ErrorCode.INPUT_BLANK_EXCEPTION);
+        validateInvisibleLength(title,
+                0, PostPolicyConstant.TITLE_MAX_LENGTH.getValue(), ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
     }
 
-    public static void validateTitleLength(String text) {
-        if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.TITLE_MAX_LENGTH.getValue()) {
-            throw new BusinessException(ErrorCode.INVALID_TITLE_LENGTH_EXCEPTION);
-        }
-    }
-
-    public static void validateContentLength(String text) {
-        if (TextLengthUtil.visibleLength(text) > PostPolicyConstant.CONTENT_MAX_LENGTH.getValue()) {
-            throw new BusinessException(ErrorCode.INVALID_CONTENT_LENGTH_EXCEPTION);
-        }
+    private static void validateContent(String content) {
+        validateNullOrBlank(content, ErrorCode.INPUT_BLANK_EXCEPTION);
+        validateInvisibleLength(content,
+                0, PostPolicyConstant.CONTENT_MAX_LENGTH.getValue(), ErrorCode.INVALID_CONTENT_LENGTH_EXCEPTION);
     }
 
     private static void validateTags(Set<PostTag> tags) {

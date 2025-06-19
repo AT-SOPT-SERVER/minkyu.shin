@@ -1,5 +1,6 @@
 package org.sopt.domain.post.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.domain.post.constant.PostSearchType;
@@ -19,9 +20,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.sopt.domain.post.constant.ApiResponseMessage.*;
+
+@Tag(name = "게시글", description = "게시글 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -31,8 +35,9 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> createPost(
             @RequestHeader("X-USER-ID") final Long userId,
             @Valid @RequestBody final CreatePostRequest createPostRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.created(postService.createPost(userId, createPostRequest)));
+        return ApiResponse.ok(
+                HttpStatus.CREATED, POST_CREATED_SUCCESS.getMessage(), postService.createPost(userId, createPostRequest)
+        );
     }
 
     @GetMapping
@@ -42,23 +47,24 @@ public class PostController {
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, name = "search-type") PostSearchType searchType,
             @RequestParam(required = false, name = "keyword") String keyword) {
-        return ResponseEntity.ok(
-                ApiResponse.ok(
-                        (keyword == null || keyword.trim().isEmpty()) ?
-                                postService.getAllPosts(sortType, page, size)
-                                : postService.searchPostsByKeyword(sortType, searchType, keyword, page, size)
-                )
+        PagedResponse<PostInfoDto> pagedResponse = (keyword == null || keyword.trim().isEmpty()) ?
+                postService.getAllPosts(sortType, page, size)
+                : postService.searchPostsByKeyword(sortType, searchType, keyword, page, size);
+        return ApiResponse.ok(
+                HttpStatus.OK,
+                POST_GET_SUCCESS.getMessage(),
+                pagedResponse
         );
     }
 
     @GetMapping("/tags/{tag}")
     public ResponseEntity<ApiResponse<GetPostListResponse>> getPostByTag(
             @PathVariable final PostTag tag) {
-        return ResponseEntity.ok(
-                ApiResponse.ok(
-                        GetPostListResponse.of(
-                                postService.getPostByTag(tag)
-                        )
+        return ApiResponse.ok(
+                HttpStatus.OK,
+                POST_GET_SUCCESS.getMessage(),
+                GetPostListResponse.of(
+                        postService.getPostByTag(tag)
                 )
         );
     }
@@ -68,8 +74,10 @@ public class PostController {
 //            @CurrentUserId Long userId,
             @PathVariable final Long id) {
         Long dummyUserId = 1L;
-        return ResponseEntity.ok(
-                ApiResponse.ok(postQueryService.getPostWithComments(dummyUserId, id))
+        return ApiResponse.ok(
+                HttpStatus.OK,
+                POST_DETAILS_GET_SUCCESS.getMessage(),
+                postQueryService.getPostWithComments(dummyUserId, id)
         );
     }
 
@@ -78,8 +86,11 @@ public class PostController {
             @RequestHeader("X-USER-ID") final Long userId,
             @PathVariable final Long id,
             @Valid @RequestBody final UpdatePostRequest updatePostRequest) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.ok(postService.updatePost(userId, id, updatePostRequest)));
+        return ApiResponse.ok(
+                HttpStatus.OK,
+                POST_DETAILS_GET_SUCCESS.getMessage(),
+                postService.updatePost(userId, id, updatePostRequest)
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -87,7 +98,7 @@ public class PostController {
             @RequestHeader("X-USER-ID") final Long userId,
             @PathVariable final Long id) {
         postService.deletePostById(userId, id);
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        return ApiResponse.ok(HttpStatus.OK, POST_DELETED_SUCCESS.getMessage());
     }
 
 }

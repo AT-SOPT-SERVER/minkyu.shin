@@ -1,8 +1,18 @@
 package org.sopt.domain.user.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.sopt.global.entity.BaseTimeEntity;
+import org.sopt.global.exception.ErrorCode;
+
+import javax.swing.*;
+
+import static org.sopt.domain.user.util.ValidationUtils.validateEmailFormat;
+import static org.sopt.domain.user.util.ValidationUtils.validatePasswordFormat;
+import static org.sopt.global.util.InputValidator.validateLength;
+import static org.sopt.global.util.InputValidator.validateNullOrBlank;
 
 
 @Entity
@@ -22,35 +32,38 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false, length = 20)
+    private String password;
 
-    public static User create(String name, String email) {
-        validate(name, email);
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    @ColumnDefault(value = "'MEMBER'")
+    private UserRole userRole;
+
+
+    public static User create(String name, String email, String password, UserRole userRole) {
+        validateName(name);
+        validateEmail(email);
+        validatePassword(password);
+
         return User.builder()
                 .name(name)
                 .email(email)
                 .build();
     }
 
-    public static void validate(String name, String email) {
-        validateName(name);
-        validateEmail(email);
+    private static void validatePassword(String password) {
+        validateNullOrBlank(password, ErrorCode.PASSWORD_NULL_OR_BLANK_EXCEPTION);
+        validatePasswordFormat(password, ErrorCode.INVALID_PASSWORD_FORMAT_EXCEPTION);
     }
 
     public static void validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("낙네임은 null 또는 빈 문자열일 수 없습니다.");
-        }
-        if (name.length() > 10) {
-            throw new IllegalArgumentException("낙네임은 10자 이하이어야 합니다");
-        }
+        validateNullOrBlank(name, ErrorCode.NAME_NULL_OR_BLANK_EXCEPTION);
+        validateLength(name, 0, 10, ErrorCode.INVALID_NAME_LENGTH_EXCEPTION);
     }
 
     private static void validateEmail(String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("이메일은 null 값이거나 비어있을 수 없습니다");
-        }
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw new IllegalArgumentException("유효하지 않은 이메일 형식입니다");
-        }
+        validateNullOrBlank(email, ErrorCode.EMAIL_NULL_OR_BLANK_EXCEPTION);
+        validateEmailFormat(email, ErrorCode.INVALID_EMAIL_FORMAT_EXCEPTION);
     }
 }
