@@ -33,35 +33,30 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             log.error("JWT Token expired: {}", e.getMessage());
-            setErrorResponse(response, ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION,
-                    ErrorCode.EXPIRED_ACCESS_TOKEN_EXCEPTION.getMessage());
+            setErrorResponse(response, ErrorCode.EXPIRED_TOKEN_EXCEPTION);
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT Token: {}", e.getMessage());
-            setErrorResponse(response, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION,
-                    ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION.getMessage());
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN_EXCEPTION);
         } catch (SignatureException e) {
             log.error("JWT signature does not match: {}", e.getMessage());
-            setErrorResponse(response, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION,
-                    ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION.getMessage());
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN_EXCEPTION);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT Token: {}", e.getMessage());
-            setErrorResponse(response, ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION,
-                    ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION.getMessage());
+            setErrorResponse(response, ErrorCode.UNSUPPORTED_JWT_TOKEN_EXCEPTION);
         } catch (IllegalArgumentException e) {
             log.error("JWT claims string is empty: {}", e.getMessage());
-            setErrorResponse(response, ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION,
-                    ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION.getMessage());
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN_EXCEPTION);
         }
     }
 
-    private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode, String message)
+    private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode)
             throws IOException {
         response.setStatus(errorCode.getHttpStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
         String jsonResponse = objectMapper.writeValueAsString(
-                ApiResponse.of(errorCode, message)
+                ApiResponse.of(errorCode, errorCode.getMessage())
         );
         response.getWriter().write(jsonResponse);
     }

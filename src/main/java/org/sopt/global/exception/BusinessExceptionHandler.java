@@ -1,6 +1,8 @@
 package org.sopt.global.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.global.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -47,9 +49,27 @@ public class BusinessExceptionHandler {
         return ApiResponse.createErrorResponseEntity(ErrorCode.METHOD_NOT_ALLOWED);
     }
 
+    // JWT 관련 예외 처리
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ApiResponse<Void>> handleExpiredJwtException(ExpiredJwtException e) {
+        log.error("JWT 토큰 만료", e);
+        return ApiResponse.createErrorResponseEntity(
+                ErrorCode.EXPIRED_TOKEN_EXCEPTION
+        );
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<Void>> handleJwtException(JwtException e) {
+        log.error("JWT 처리 오류", e);
+        return ApiResponse.createErrorResponseEntity(
+                ErrorCode.INVALID_TOKEN_EXCEPTION
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnhandledException(Exception e) {
         log.error("Unhandled Exception: {}", e.getMessage(), e);
         return ApiResponse.createErrorResponseEntity(ErrorCode.INTERNAL_SERVER_ERROR);
     }
+
 }

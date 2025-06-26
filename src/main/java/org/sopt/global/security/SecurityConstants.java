@@ -10,7 +10,8 @@ public class SecurityConstants {
     };
 
     public static final String[] PUBLIC_API_URLS = {
-            "/v1/auth/**"
+            "/v1/api/auth/login",
+            "/v1/api/auth/social/**",
     };
 
 

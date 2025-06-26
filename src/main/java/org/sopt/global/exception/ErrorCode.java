@@ -35,13 +35,13 @@ public enum ErrorCode {
      * auth. code prefix: auth-
      */
     UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-1", "인증되지 않은 사용자입니다."),
-    EXPIRED_ACCESS_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-2", "만료된 엑세스 토큰입니다."),
-    EXPIRED_REFRESH_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-3", "만료된 리프레시 토큰입니다."),
-    INVALID_ACCESS_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-4", "유효하지 않은 엑세스 토큰입니다."),
-    INVALID_REFRESH_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-5", "유효하지 않은 리프레시 토큰입니다."),
+    EXPIRED_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-2", "만료된 토큰입니다."),
+    INVALID_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-4", "유효하지 않은 토큰입니다."),
+    NOT_FOUND_BEARER_PREFIX_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-5", "토큰이 Bearer로 시작하지 않습니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-6", "지원하지 않는 JWT 토큰입니다."),
     UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-7", "지원하지 않는 소셜 플랫폼입니다."),
     NO_PERMISSION_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-8", "해당 요청에 대한 권한이 없는 사용자입니다."),
+    NOT_FOUND_REFRESH_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-9" , "해당 유저의 리프레시 토큰을 찾을 수 없습니다."),
 
 
     /**

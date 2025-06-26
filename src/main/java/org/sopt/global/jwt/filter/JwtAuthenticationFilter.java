@@ -51,41 +51,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String accessToken = headerTokenExtractor.extractAccessToken(request);
-        validateAccessToken(accessToken);
 
-        try {
-            Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
-            UserDetails userDetails = principalDetailsService.loadUserById(userId);
+        Long userId = jwtResolver.getUserIdFromAccessToken(accessToken);
+        UserDetails userDetails = principalDetailsService.loadUserByUsername(userId.toString());
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, "", userDetails.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            log.debug("인증된 사용자 아이디: {}", userId);
-        } catch (UsernameNotFoundException e) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_USER_EXCEPTION);
-        }
+        log.debug("인증된 사용자 아이디: {}", userId);
 
         filterChain.doFilter(request, response);
     }
-
-    private void validateAccessToken(String accessToken) {
-        if (!StringUtils.hasText(accessToken)) {
-            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
-        }
-
-        if (!jwtResolver.validateAccessToken(accessToken)) {
-            log.warn("유효하지 않은 Access Token: {}", accessToken);
-            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
-        }
-    }
-
 
 }

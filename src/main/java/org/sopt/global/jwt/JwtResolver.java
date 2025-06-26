@@ -41,17 +41,6 @@ public class JwtResolver {
         return Long.parseLong(claims.get("userId").toString());
     }
 
-    public boolean validateAccessToken(String accessToken) {
-        Claims claims = getAccessTokenClaims(accessToken);
-        return !claims.getExpiration().before(new Date());
-    }
-
-    public boolean validateRefreshToken(String refreshToken) {
-        Claims claims = getRefreshTokenClaims(refreshToken);
-        return !claims.getExpiration().before(new Date());
-    }
-
-
     private Claims getAccessTokenClaims(String accessToken) {
         return Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(accessKey.getEncoded()))

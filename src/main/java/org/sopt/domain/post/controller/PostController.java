@@ -12,6 +12,7 @@ import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
+import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.annotation.V1;
 import org.sopt.global.dto.ApiResponse;
 import org.sopt.domain.post.dto.response.GetPostDetailsWithCommentsResponse;
@@ -35,7 +36,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostDto>> createPost(
-            @RequestHeader("X-USER-ID") final Long userId,
+            @CurrentUserId final Long userId,
             @Valid @RequestBody final CreatePostRequest createPostRequest) {
         return ApiResponse.ok(
                 HttpStatus.CREATED, POST_CREATED_SUCCESS.getMessage(), postService.createPost(userId, createPostRequest)
@@ -73,31 +74,31 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<GetPostDetailsWithCommentsResponse>> getPostById(
-//            @CurrentUserId Long userId,
-            @PathVariable final Long id) {
-        Long dummyUserId = 1L;
+            @CurrentUserId Long userId,
+            @PathVariable final Long id
+    ) {
         return ApiResponse.ok(
                 HttpStatus.OK,
                 POST_DETAILS_GET_SUCCESS.getMessage(),
-                postQueryService.getPostWithComments(dummyUserId, id)
+                postQueryService.getPostWithComments(userId, id)
         );
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<PostDto>> updatePost(
-            @RequestHeader("X-USER-ID") final Long userId,
+            @CurrentUserId final Long userId,
             @PathVariable final Long id,
             @Valid @RequestBody final UpdatePostRequest updatePostRequest) {
         return ApiResponse.ok(
                 HttpStatus.OK,
-                POST_DETAILS_GET_SUCCESS.getMessage(),
+                POST_UPDATED_SUCCESS.getMessage(),
                 postService.updatePost(userId, id, updatePostRequest)
         );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deletePost(
-            @RequestHeader("X-USER-ID") final Long userId,
+            @CurrentUserId final Long userId,
             @PathVariable final Long id) {
         postService.deletePostById(userId, id);
         return ApiResponse.ok(HttpStatus.OK, POST_DELETED_SUCCESS.getMessage());

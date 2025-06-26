@@ -21,19 +21,25 @@ public class HeaderTokenExtractor {
     public String extractAccessToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
         checkValidBearerToken(AUTHORIZATION_HEADER, authorizationHeader);
-        return authorizationHeader.substring(jwtProperty.getBearerPrefix().length());
+
+        String bearerPrefix = jwtProperty.getBearerPrefix() + " ";
+        return authorizationHeader.substring(bearerPrefix.length());
     }
 
     public String extractRefreshToken(HttpServletRequest request) {
         String refreshTokenHeader = request.getHeader(REFRESH_TOKEN_HEADER);
+        log.info("extractRefreshToken 호출, Refresh-Token 헤더 값: {}", refreshTokenHeader);
         checkValidBearerToken(REFRESH_TOKEN_HEADER, refreshTokenHeader);
-        return refreshTokenHeader.substring(jwtProperty.getBearerPrefix().length());
+
+        String bearerPrefix = jwtProperty.getBearerPrefix() + " ";
+        log.info("extractRefreshToken: {}", refreshTokenHeader.substring(bearerPrefix.length()));
+        return refreshTokenHeader.substring(bearerPrefix.length());
     }
 
     private void checkValidBearerToken(String headerName, String bearerToken) {
         if (!isValidBearerToken(bearerToken)) {
             log.error("{} 헤더가 \"Bearer\"로 시작하지 않습니다 : [{}]", headerName, bearerToken);
-            throw new BusinessException(ErrorCode.INVALID_ACCESS_TOKEN_EXCEPTION);
+            throw new BusinessException(ErrorCode.NOT_FOUND_BEARER_PREFIX_EXCEPTION);
         }
     }
 

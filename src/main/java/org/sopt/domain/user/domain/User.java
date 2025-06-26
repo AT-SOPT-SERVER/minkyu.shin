@@ -43,9 +43,6 @@ public class User extends BaseTimeEntity {
     @Column(length = 20)
     private String password;  // 소셜 로그인 시 null 가능
 
-    @Column(length = 500)
-    private String profileImageUrl;
-
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     @ColumnDefault(value = "'MEMBER'")
@@ -83,16 +80,13 @@ public class User extends BaseTimeEntity {
     }
 
     // 소셜 로그인용 정적 팩토리 메서드
-    public static User createSocialUser(String name, String email, String profileImageUrl, UserRole userRole) {
+    public static User createSocialUser(String name, String email, UserRole userRole) {
         validateName(name);
-        if (email != null && !email.isBlank()) {
-            validateEmail(email);
-        }
+        validateEmail(email);
 
         return User.builder()
                 .name(name)
                 .email(email)
-                .profileImageUrl(profileImageUrl)
                 .userRole(userRole)
                 .status(UserStatus.ACTIVE)
                 .build();
@@ -118,22 +112,11 @@ public class User extends BaseTimeEntity {
         this.lastLoginAt = LocalDateTime.now();
     }
 
-    public void updateProfile(String name, String profileImageUrl) {
-        if (name != null && !name.isBlank()) {
-            validateName(name);
-            this.name = name;
-        }
-        if (profileImageUrl != null) {
-            this.profileImageUrl = profileImageUrl;
-        }
-    }
-
     public void withdraw() {
         this.status = UserStatus.WITHDRAWN;
         this.name = "탈퇴한 회원";
         this.email = null;
         this.password = null;
-        this.profileImageUrl = null;
         this.deletedAt = LocalDateTime.now();
     }
 

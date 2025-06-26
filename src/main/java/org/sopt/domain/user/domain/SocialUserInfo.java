@@ -39,7 +39,7 @@ public class SocialUserInfo extends BaseTimeEntity {
     private String socialId;
 
     // 정적 팩토리 메서드
-    public static SocialUserInfo newInstance(User user, SocialPlatform platform, String socialId) {
+    public static SocialUserInfo create(User user, SocialPlatform platform, String socialId) {
         return SocialUserInfo.builder()
                 .user(user)
                 .socialPlatform(platform)
@@ -49,7 +49,7 @@ public class SocialUserInfo extends BaseTimeEntity {
     }
 
     // 소셜 코드 생성 (플랫폼_소셜ID)
-    public static String calculateSocialCode(SocialPlatform socialPlatform, String socialId) {
+    protected static String calculateSocialCode(SocialPlatform socialPlatform, String socialId) {
         return String.format("%s_%s", socialPlatform.name(), socialId);
     }
 }
