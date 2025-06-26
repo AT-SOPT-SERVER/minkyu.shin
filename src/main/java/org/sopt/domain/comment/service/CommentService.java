@@ -25,7 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentDto createComment(final Long userId, final CreateCommentRequest createCommentRequest) {
+    public CommentDto createComment(final Long userId, CreateCommentRequest createCommentRequest) {
         Comment comment = Comment.create(
                 postRepository.findById(createCommentRequest.postId())
                         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION)),
@@ -47,7 +47,7 @@ public class CommentService {
 
     @Transactional
     public CommentDto updateComment(
-            final Long commentId, final Long userId, final UpdateCommentRequest updateCommentRequest) {
+            final Long commentId, final Long userId, UpdateCommentRequest updateCommentRequest) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
 

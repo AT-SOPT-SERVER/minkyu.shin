@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserRole {
+public enum SocialPlatform {
+    KAKAO("카카오");
 
-    MEMBER("ROLE_MEMBER"),
-    ADMIN("ROLE_ADMIN");
-
-    private final String authority;
+    private final String description;
 }

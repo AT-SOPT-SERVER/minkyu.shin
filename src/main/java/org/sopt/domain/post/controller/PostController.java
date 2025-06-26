@@ -12,6 +12,7 @@ import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
+import org.sopt.global.annotation.V1;
 import org.sopt.global.dto.ApiResponse;
 import org.sopt.domain.post.dto.response.GetPostDetailsWithCommentsResponse;
 import org.sopt.global.dto.PagedResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.sopt.domain.post.constant.ApiResponseMessage.*;
 
+@V1
 @Tag(name = "게시글", description = "게시글 관련 API")
 @RestController
 @RequiredArgsConstructor

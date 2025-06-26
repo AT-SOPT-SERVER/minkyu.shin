@@ -9,11 +9,13 @@ import org.sopt.domain.comment.dto.request.CreateCommentRequest;
 import org.sopt.domain.comment.dto.request.UpdateCommentRequest;
 import org.sopt.domain.comment.service.CommentService;
 import org.sopt.global.annotation.CurrentUserId;
+import org.sopt.global.annotation.V1;
 import org.sopt.global.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@V1
 @Tag(name = "댓글", description = "댓글 관련 API")
 @RestController
 @RequiredArgsConstructor

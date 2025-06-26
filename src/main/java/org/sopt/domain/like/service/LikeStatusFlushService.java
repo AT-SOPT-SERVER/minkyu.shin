@@ -41,7 +41,7 @@ public class LikeStatusFlushService {
         }
     }
 
-    public void syncUserLikeStatus(Long userId, Long targetId, LikeTargetType type, boolean liked) {
+    public void syncUserLikeStatus(final Long userId, final Long targetId, final LikeTargetType type, boolean liked) {
         boolean exists = likeRepository.existsByUserIdAndLikeTargetTypeAndTargetId(userId, type, targetId);
 
         if (liked && !exists) {
@@ -51,12 +51,12 @@ public class LikeStatusFlushService {
         }
     }
 
-    private LikeTargetType extractType(String key) {
+    private LikeTargetType extractType(final String key) {
         String[] parts = key.split(":");
         return LikeTargetType.valueOf(parts[1].toUpperCase());
     }
 
-    private Long extractTargetId(String key) {
+    private Long extractTargetId(final String key) {
         String[] parts = key.split(":");
         try {
             return Long.parseLong(parts[2]);
@@ -65,7 +65,7 @@ public class LikeStatusFlushService {
         }
     }
 
-    private Long extractUserId(String key) {
+    private Long extractUserId(final String key) {
         String[] parts = key.split(":");
         try {
             return Long.parseLong(parts[4]);

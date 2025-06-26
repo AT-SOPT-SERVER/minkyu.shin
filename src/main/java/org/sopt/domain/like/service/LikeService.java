@@ -18,7 +18,7 @@ public class LikeService {
     private final LikeCacheRepository likeCacheRepository;
 
     @Transactional
-    public boolean toggleLike(final Long userId, final LikeToggleRequest request) {
+    public boolean toggleLike(final Long userId, LikeToggleRequest request) {
         Long targetId = request.targetId();
         LikeTargetType targetType = request.likeTargetType();
 

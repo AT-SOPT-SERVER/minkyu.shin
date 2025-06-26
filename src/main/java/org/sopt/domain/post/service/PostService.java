@@ -35,7 +35,7 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostDto createPost(final Long userId, final CreatePostRequest request) {
+    public PostDto createPost(final Long userId, CreatePostRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
         validateDuplicatedTitle(request.title());
@@ -100,7 +100,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto updatePost(final Long userId, final Long id, final UpdatePostRequest request) {
+    public PostDto updatePost(final Long userId, final Long id, UpdatePostRequest request) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
 

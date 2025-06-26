@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
-                .addSecurityItem(new SecurityRequirement().addList(JWT_SCHEME))
+                .addSecurityItem(new SecurityRequirement().addList(JWT_SCHEME)) // 모든 API에 JWT 인증 적용
                 .components(new Components()
                         .addSecuritySchemes(JWT_SCHEME,
                                 new SecurityScheme()
@@ -38,7 +38,7 @@ public class SwaggerConfig {
                 .group("public-api")
                 .pathsToMatch("/**")
                 .packagesToScan("org.sopt")
-                .packagesToExclude("org.sopt.global.common.exception")
+                .packagesToExclude("org.sopt.global.exception")
                 .build();
     }
 

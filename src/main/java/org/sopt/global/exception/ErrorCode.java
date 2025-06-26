@@ -40,6 +40,8 @@ public enum ErrorCode {
     INVALID_ACCESS_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-4", "유효하지 않은 엑세스 토큰입니다."),
     INVALID_REFRESH_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-5", "유효하지 않은 리프레시 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-6", "지원하지 않는 JWT 토큰입니다."),
+    UNSUPPORTED_SOCIAL_PLATFORM_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-7", "지원하지 않는 소셜 플랫폼입니다."),
+    NO_PERMISSION_EXCEPTION(HttpStatus.UNAUTHORIZED, "auth-8", "해당 요청에 대한 권한이 없는 사용자입니다."),
 
 
     /**
@@ -65,6 +67,8 @@ public enum ErrorCode {
     EMAIL_NULL_OR_BLANK_EXCEPTION(HttpStatus.BAD_REQUEST, "user-2", "이메일은 null 또는 빈 문자열일 수 없습니다."),
     INVALID_EMAIL_FORMAT_EXCEPTION(HttpStatus.BAD_REQUEST, "user-3", "이메일 형식이 올바르지 않습니다."),
     INVALID_NAME_LENGTH_EXCEPTION(HttpStatus.BAD_REQUEST, "user-4", "이름은 10자 이하로 작성해야 합니다."),
+    DUPLICATED_USER_EXCEPTION(HttpStatus.BAD_REQUEST, "user-5" , "이미 가입된 유저입니다." ),
+    NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "user-6" , "해당 유저를 찾을 수 없습니다." ),
 
     /**
      * password. code prefix: password-

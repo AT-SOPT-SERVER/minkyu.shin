@@ -7,6 +7,7 @@ import org.sopt.domain.like.constant.ApiResponseMessage;
 import org.sopt.domain.like.dto.request.LikeToggleRequest;
 import org.sopt.domain.like.dto.response.LikeToggleResponse;
 import org.sopt.domain.like.service.LikeService;
+import org.sopt.global.annotation.V1;
 import org.sopt.global.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@V1
 @Tag(name = "좋아요", description = "좋아요 관련 API")
 @RestController
 @RequiredArgsConstructor
