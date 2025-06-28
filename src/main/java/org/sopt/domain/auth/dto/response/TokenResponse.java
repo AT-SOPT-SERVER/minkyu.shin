@@ -1,7 +1,7 @@
 package org.sopt.domain.auth.dto.response;
 
-import jakarta.validation.constraints.NotNull;
-import org.sopt.global.jwt.dto.JwtTokenCollection;
+
+import org.sopt.global.security.jwt.dto.JwtTokenCollection;
 
 public record TokenResponse(
         String accessToken,

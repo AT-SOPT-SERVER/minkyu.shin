@@ -1,4 +1,4 @@
-package org.sopt.global.jwt.filter;
+package org.sopt.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;

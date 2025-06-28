@@ -1,12 +1,12 @@
-package org.sopt.global.jwt;
+package org.sopt.global.security.jwt;
 
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.sopt.global.jwt.dto.JwtPayload;
-import org.sopt.global.jwt.dto.JwtTokenCollection;
+import org.sopt.global.security.jwt.dto.JwtPayload;
+import org.sopt.global.security.jwt.dto.JwtTokenCollection;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;

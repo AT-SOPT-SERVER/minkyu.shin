@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
-import org.sopt.global.jwt.JwtProperty;
+import org.sopt.global.security.jwt.JwtProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

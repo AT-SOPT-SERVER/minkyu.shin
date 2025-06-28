@@ -5,7 +5,7 @@ import org.sopt.domain.auth.service.SocialUserProvider;
 import org.sopt.domain.user.domain.SocialPlatform;
 import org.sopt.domain.user.domain.User;
 import org.sopt.global.feign.oauth.kakao.KakaoServerClient;
-import org.sopt.global.jwt.JwtProperty;
+import org.sopt.global.security.jwt.JwtProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

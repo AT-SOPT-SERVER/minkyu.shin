@@ -1,4 +1,4 @@
-package org.sopt.global.jwt;
+package org.sopt.global.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

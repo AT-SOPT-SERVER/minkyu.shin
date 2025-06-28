@@ -1,4 +1,4 @@
-package org.sopt.global.jwt.dto;
+package org.sopt.global.security.jwt.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

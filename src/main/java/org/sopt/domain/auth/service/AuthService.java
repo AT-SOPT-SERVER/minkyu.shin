@@ -1,7 +1,5 @@
 package org.sopt.domain.auth.service;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.domain.auth.dto.request.SocialLoginRequest;
@@ -14,11 +12,10 @@ import org.sopt.domain.user.domain.UserStatus;
 import org.sopt.domain.user.repository.UserRepository;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
-import org.sopt.global.jwt.JwtProvider;
-import org.sopt.global.jwt.JwtResolver;
-import org.sopt.global.jwt.dto.JwtPayload;
-import org.sopt.global.jwt.dto.JwtTokenCollection;
-import org.sopt.global.util.HeaderTokenExtractor;
+import org.sopt.global.security.jwt.JwtProvider;
+import org.sopt.global.security.jwt.JwtResolver;
+import org.sopt.global.security.jwt.dto.JwtPayload;
+import org.sopt.global.security.jwt.dto.JwtTokenCollection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +54,6 @@ public class AuthService {
 
         // 3. DB에 저장된 리프레시 토큰과 비교
         refreshTokenService.validateStoredToken(user, refreshToken);
-
-
 
         return TokenResponse.from(createNewTokens(user));
     }

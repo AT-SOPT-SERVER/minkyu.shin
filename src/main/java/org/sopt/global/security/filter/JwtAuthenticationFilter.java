@@ -1,4 +1,4 @@
-package org.sopt.global.jwt.filter;
+package org.sopt.global.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -6,9 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sopt.global.exception.BusinessException;
-import org.sopt.global.exception.ErrorCode;
-import org.sopt.global.jwt.JwtResolver;
+import org.sopt.global.security.jwt.JwtResolver;
 import org.sopt.global.util.HeaderTokenExtractor;
 import org.sopt.global.security.PrincipalDetailsService;
 import org.sopt.global.security.SecurityConstants;
@@ -16,11 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;

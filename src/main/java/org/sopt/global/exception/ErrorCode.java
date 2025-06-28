@@ -47,14 +47,14 @@ public enum ErrorCode {
     /**
      * resource. code prefix: resource-
      */
-    FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN, "auth-1", "리소스에 대한 접근 권한이 없습니다."),
+    FORBIDDEN_EXCEPTION(HttpStatus.FORBIDDEN, "resource-1", "리소스에 대한 접근 권한이 없습니다."),
 
 
     /**
      * common. code prefix: common-
      */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "auth-1", "서버 내부에서 오류가 발생했습니다"),
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "auth-2", "입력값이 올바르지 않습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "common-1", "서버 내부에서 오류가 발생했습니다"),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "common-2", "입력값이 올바르지 않습니다."),
     NOT_FOUND_RESOURCE_EXCEPTION(HttpStatus.NOT_FOUND, "common-3", "존재하지 않는 데이터입니다."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "common-4", "지원하지 않는 HTTP 메소드입니다."),
     INVALID_CACHE_KEY_FORMAT(HttpStatus.BAD_REQUEST, "common-5", "캐시 키 형식이 잘못되었습니다."),
