@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.sopt.global.exception.ErrorCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -56,7 +56,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
 
         String jsonResponse = objectMapper.writeValueAsString(
-                ApiResponse.of(errorCode, errorCode.getMessage())
+                CustomApiResponse.of(errorCode, errorCode.getMessage())
         );
         response.getWriter().write(jsonResponse);
     }

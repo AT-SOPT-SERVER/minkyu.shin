@@ -35,15 +35,11 @@ public class SocialUserInfo extends BaseTimeEntity {
     @Column(name = "social_code", nullable = false, unique = true, length = 100)
     private String socialCode;
 
-    @Column(name = "social_id", nullable = false, length = 100)
-    private String socialId;
-
     // 정적 팩토리 메서드
     public static SocialUserInfo create(User user, SocialPlatform platform, String socialId) {
         return SocialUserInfo.builder()
                 .user(user)
                 .socialPlatform(platform)
-                .socialId(socialId)
                 .socialCode(calculateSocialCode(platform, socialId))
                 .build();
     }

@@ -8,7 +8,7 @@ import org.sopt.domain.like.dto.request.LikeToggleRequest;
 import org.sopt.domain.like.dto.response.LikeToggleResponse;
 import org.sopt.domain.like.service.LikeService;
 import org.sopt.global.annotation.V1;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,12 +26,12 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/toggle")
-    public ResponseEntity<ApiResponse<LikeToggleResponse>> toggleLike(
+    public ResponseEntity<CustomApiResponse<LikeToggleResponse>> toggleLike(
 //            @CurrentUserId Long userId,
             @Valid @RequestBody LikeToggleRequest likeToggleRequest) {
         Long dummyUserId = 1L;
 
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 ApiResponseMessage.LIKE_STATUS_TOGGLED_SUCCESS.getMessage(),
                 LikeToggleResponse.from(likeService.toggleLike(dummyUserId, likeToggleRequest))

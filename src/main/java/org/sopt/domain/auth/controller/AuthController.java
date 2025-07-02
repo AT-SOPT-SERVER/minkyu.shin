@@ -11,7 +11,7 @@ import org.sopt.domain.user.domain.SocialPlatform;
 import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.annotation.ExtractRefreshToken;
 import org.sopt.global.annotation.V1;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements OAuthApi {
 
     private final AuthService authService;
 
     @PostMapping("/social/{socialPlaform}/login")
-    public ResponseEntity<ApiResponse<TokenResponse>> socialLogin(
+    public ResponseEntity<CustomApiResponse<TokenResponse>> socialLogin(
             @PathVariable("socialPlaform") SocialPlatform socialPlatform,
             @Valid SocialLoginRequest socialLoginRequest
             ) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 ApiResponseMessage.SOCIAL_LOGIN_SUCCESS.getMessage(),
                 authService.socialLogin(socialPlatform, socialLoginRequest)
@@ -38,18 +38,18 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(
+    public ResponseEntity<CustomApiResponse<Void>> logout(
             @CurrentUserId Long userId
     ) {
         authService.logout(userId);
-        return ApiResponse.ok(HttpStatus.OK, ApiResponseMessage.LOGOUT_SUCCESS.getMessage());
+        return CustomApiResponse.ok(HttpStatus.OK, ApiResponseMessage.LOGOUT_SUCCESS.getMessage());
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenResponse>> reissue(
+    public ResponseEntity<CustomApiResponse<TokenResponse>> reissue(
             @ExtractRefreshToken String refreshToken
     ) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 ApiResponseMessage.TOKEN_REISSUE_SUCCESS.getMessage(),
                 authService.reissue(refreshToken)

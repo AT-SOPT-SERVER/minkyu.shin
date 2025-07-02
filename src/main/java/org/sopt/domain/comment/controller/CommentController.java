@@ -10,7 +10,7 @@ import org.sopt.domain.comment.dto.request.UpdateCommentRequest;
 import org.sopt.domain.comment.service.CommentService;
 import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.annotation.V1;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +25,11 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping()
-    ResponseEntity<ApiResponse<CommentDto>> createComment(
+    ResponseEntity<CustomApiResponse<CommentDto>> createComment(
 //            @CurrentUserId Long userId,
             @Valid @RequestBody CreateCommentRequest createCommentRequest) {
         Long dummyUserId = 1L;
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.CREATED,
                 ApiResponseMessage.COMMENT_CREATED_SUCCESS.getMessage(),
                 commentService.createComment(dummyUserId, createCommentRequest)
@@ -37,11 +37,11 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
-    ResponseEntity<ApiResponse<CommentDto>> updateComment(
+    ResponseEntity<CustomApiResponse<CommentDto>> updateComment(
             @CurrentUserId Long userId,
             @PathVariable("commentId") Long commentId,
             @Valid @RequestBody UpdateCommentRequest updateCommentRequest) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 ApiResponseMessage.COMMENT_UPDATED_SUCCESS.getMessage(),
                 commentService.updateComment(userId, commentId, updateCommentRequest)
@@ -49,11 +49,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    ResponseEntity<ApiResponse<Void>> deleteComment(
+    ResponseEntity<CustomApiResponse<Void>> deleteComment(
             @CurrentUserId Long userId,
             @PathVariable("commentId") Long commentId) {
         commentService.deleteComment(userId, commentId);
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 ApiResponseMessage.COMMENT_UPDATED_SUCCESS.getMessage()
         );

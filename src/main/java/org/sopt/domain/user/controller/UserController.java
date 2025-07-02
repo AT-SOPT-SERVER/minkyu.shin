@@ -9,7 +9,7 @@ import org.sopt.domain.user.dto.request.WithdrawRequest;
 import org.sopt.domain.user.service.UserService;
 import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.annotation.V1;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,10 +27,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> createUser(
+    public ResponseEntity<CustomApiResponse<Void>> createUser(
             @Valid @RequestBody CreateUserRequest createUserRequest) {
         userService.createUser(createUserRequest);
-        return ApiResponse.ok(HttpStatus.CREATED, ApiResponseMessage.USER_CREATED_SUCCESS.getMessage());
+        return CustomApiResponse.ok(HttpStatus.CREATED, ApiResponseMessage.USER_CREATED_SUCCESS.getMessage());
     }
 
 

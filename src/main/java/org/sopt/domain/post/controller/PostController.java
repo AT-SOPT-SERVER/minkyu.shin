@@ -14,7 +14,7 @@ import org.sopt.domain.post.dto.response.GetPostListResponse;
 import org.sopt.domain.post.service.PostService;
 import org.sopt.global.annotation.CurrentUserId;
 import org.sopt.global.annotation.V1;
-import org.sopt.global.dto.ApiResponse;
+import org.sopt.global.dto.CustomApiResponse;
 import org.sopt.domain.post.dto.response.GetPostDetailsWithCommentsResponse;
 import org.sopt.global.dto.PagedResponse;
 import org.sopt.query.PostQueryService;
@@ -35,16 +35,16 @@ public class PostController {
     private final PostQueryService postQueryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<PostDto>> createPost(
+    public ResponseEntity<CustomApiResponse<PostDto>> createPost(
             @CurrentUserId final Long userId,
             @Valid @RequestBody final CreatePostRequest createPostRequest) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.CREATED, POST_CREATED_SUCCESS.getMessage(), postService.createPost(userId, createPostRequest)
         );
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<PagedResponse<PostInfoDto>>> getPosts (
+    public ResponseEntity<CustomApiResponse<PagedResponse<PostInfoDto>>> getPosts (
             @RequestParam(required = false, defaultValue = "LATEST", name = "sortBy") PostSortType sortType,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
@@ -53,7 +53,7 @@ public class PostController {
         PagedResponse<PostInfoDto> pagedResponse = (keyword == null || keyword.trim().isEmpty()) ?
                 postService.getAllPosts(sortType, page, size)
                 : postService.searchPostsByKeyword(sortType, searchType, keyword, page, size);
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 POST_GET_SUCCESS.getMessage(),
                 pagedResponse
@@ -61,9 +61,9 @@ public class PostController {
     }
 
     @GetMapping("/tags/{tag}")
-    public ResponseEntity<ApiResponse<GetPostListResponse>> getPostByTag(
+    public ResponseEntity<CustomApiResponse<GetPostListResponse>> getPostByTag(
             @PathVariable final PostTag tag) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 POST_GET_SUCCESS.getMessage(),
                 GetPostListResponse.of(
@@ -73,11 +73,11 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<GetPostDetailsWithCommentsResponse>> getPostById(
+    public ResponseEntity<CustomApiResponse<GetPostDetailsWithCommentsResponse>> getPostById(
             @CurrentUserId Long userId,
             @PathVariable final Long id
     ) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 POST_DETAILS_GET_SUCCESS.getMessage(),
                 postQueryService.getPostWithComments(userId, id)
@@ -85,11 +85,11 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PostDto>> updatePost(
+    public ResponseEntity<CustomApiResponse<PostDto>> updatePost(
             @CurrentUserId final Long userId,
             @PathVariable final Long id,
             @Valid @RequestBody final UpdatePostRequest updatePostRequest) {
-        return ApiResponse.ok(
+        return CustomApiResponse.ok(
                 HttpStatus.OK,
                 POST_UPDATED_SUCCESS.getMessage(),
                 postService.updatePost(userId, id, updatePostRequest)
@@ -97,11 +97,11 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deletePost(
+    public ResponseEntity<CustomApiResponse<Void>> deletePost(
             @CurrentUserId final Long userId,
             @PathVariable final Long id) {
         postService.deletePostById(userId, id);
-        return ApiResponse.ok(HttpStatus.OK, POST_DELETED_SUCCESS.getMessage());
+        return CustomApiResponse.ok(HttpStatus.OK, POST_DELETED_SUCCESS.getMessage());
     }
 
 }
