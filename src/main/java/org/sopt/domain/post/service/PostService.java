@@ -1,5 +1,7 @@
 package org.sopt.domain.post.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.sopt.domain.post.constant.PostPolicyConstant;
 import org.sopt.domain.post.constant.PostSearchType;
 import org.sopt.domain.post.constant.PostSortType;
@@ -12,54 +14,60 @@ import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.repository.PostRepository;
 import org.sopt.domain.user.domain.User;
 import org.sopt.domain.user.repository.UserRepository;
+import org.sopt.global.dto.PagedResponse;
 import org.sopt.global.exception.BusinessException;
 import org.sopt.global.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
-
     @Transactional
-    public PostDto createPost(final Long userId, final CreatePostRequest request) {
+    public PostDto createPost(final Long userId, CreatePostRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_RESOURCE_EXCEPTION));
         validateDuplicatedTitle(request.title());
         validatePostDelay();
 
-        var post = Post.createPost(
+        var post = Post.create(
                 request.title(),
                 request.content(),
-                request.tag(),
+                request.tags(),
                 user
         );
 
         return PostDto.from(postRepository.save(post));
     }
 
-    public List<PostInfoDto> getAllPosts(final PostSortType sortType) {
-        if (sortType == PostSortType.TIME) {
-            List<Post> result = postRepository.findAllByOrderByCreatedAtDesc();
-            return result.stream().map(PostInfoDto::from).toList();
-        }
-
-        return postRepository.findAll().stream()
+    public PagedResponse<PostInfoDto> getAllPosts(final PostSortType sortType, final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size, sortType.getSort());
+        Page<Post> pagedPosts = postRepository.findAll(pageable);
+        List<PostInfoDto> postInfoList = pagedPosts.getContent().stream()
                 .map(PostInfoDto::from)
                 .toList();
+
+        return new PagedResponse<>(
+                postInfoList,
+                pagedPosts.getNumber(),
+                pagedPosts.getSize(),
+                pagedPosts.getTotalElements(),
+                pagedPosts.getTotalPages(),
+                pagedPosts.isLast()
+        );
     }
 
     public PostDto getPostById(final Long id) {
@@ -68,26 +76,33 @@ public class PostService {
         return PostDto.from(post);
     }
 
-    public List<PostInfoDto> searchPostsByKeyword(
-            final PostSearchType searchType, final String keyword) {
-        List<Post> posts = new ArrayList<>();
-        if (searchType == PostSearchType.TITLE) {
-            posts = postRepository.findByTitleContainingOrderByCreatedAtDesc(keyword);
-        } else if (searchType == PostSearchType.AUTHOR) {
-            posts = postRepository.findByUserNameContainingOrderByCreatedAtDesc(keyword);
-        }
+    public PagedResponse<PostInfoDto> searchPostsByKeyword(
+            final PostSortType sortType,
+            final PostSearchType searchType, final String keyword, final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size, sortType.getSort());
+        Page<Post> pagedPosts = getPagedPosts(keyword, searchType, pageable);
+        List<PostInfoDto> postInfoList = pagedPosts.getContent().stream()
+                .map(PostInfoDto::from)
+                .toList();
 
-        return posts.stream().map(PostInfoDto::from).toList();
+        return new PagedResponse<>(
+                postInfoList,
+                pagedPosts.getNumber(),
+                pagedPosts.getSize(),
+                pagedPosts.getTotalElements(),
+                pagedPosts.getTotalPages(),
+                pagedPosts.isLast()
+        );
     }
 
     public List<PostInfoDto> getPostByTag(final PostTag tag) {
-        return postRepository.findByTagOrderByCreatedAtDesc(tag).stream()
+        return postRepository.findByTagsContainingOrderByCreatedAtDesc(tag).stream()
                 .map(PostInfoDto::from)
                 .toList();
     }
 
     @Transactional
-    public PostDto updatePost(final Long userId, final Long id, final UpdatePostRequest request) {
+    public PostDto updatePost(final Long userId, final Long id, UpdatePostRequest request) {
         var post = postRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_POST_EXCEPTION));
 
@@ -96,7 +111,7 @@ public class PostService {
         }
 
         validateDuplicatedTitle(request.title());
-        post.updatePost(request.title(), request.content());
+        post.updatePost(request.title(), request.content(), request.postTags());
 
         return PostDto.from(post);
     }
@@ -119,6 +134,7 @@ public class PostService {
         }
     }
 
+
     /*
      * 수정 필요!
      */
@@ -132,4 +148,10 @@ public class PostService {
                 });
     }
 
+    private Page<Post> getPagedPosts(final String keyword, final PostSearchType searchType, final Pageable pageable) {
+        return switch (searchType) {
+            case TITLE -> postRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+            case AUTHOR -> postRepository.findByUserNameContainingIgnoreCase(keyword, pageable);
+        };
+    }
 }
